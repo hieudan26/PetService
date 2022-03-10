@@ -1,8 +1,14 @@
 
-package petservice.model.payload.request;
+package petservice.model.payload.request.UserResources;
+
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class RoleToUserRequest {
     @NotBlank
     private String email;

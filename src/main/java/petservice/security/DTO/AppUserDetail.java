@@ -23,8 +23,9 @@ public class AppUserDetail implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private Collection<String> roles;
     private Boolean enable;
+    private Boolean isAccountNonLocked;
     public AppUserDetail(String id, String username, String email, String password,
-                         Collection<? extends GrantedAuthority> authorities,Collection<String> roles,Boolean active) {
+                         Collection<? extends GrantedAuthority> authorities,Collection<String> roles,Boolean active,Boolean isAccountNonLocked) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -32,6 +33,7 @@ public class AppUserDetail implements UserDetails {
         this.authorities = authorities;
         this.roles = roles;
         this.enable = active;
+        this.isAccountNonLocked =isAccountNonLocked;
     }
     public static AppUserDetail build(UserEntity user) {
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -54,6 +56,7 @@ public class AppUserDetail implements UserDetails {
                 user.getPassword(),
                 authorities,
                 roleNames,
+                user.isActive(),
                 user.isStatus());
     }
     @Override
@@ -77,7 +80,7 @@ public class AppUserDetail implements UserDetails {
     }
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isAccountNonLocked;
     }
     @Override
     public boolean isCredentialsNonExpired() {

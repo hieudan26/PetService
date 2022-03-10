@@ -1,5 +1,6 @@
 package petservice.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "\"Role\"", schema = "\"public\"")
 public class RoleEntity {
+    @JsonIgnore
     private String id;
     private String name;
 

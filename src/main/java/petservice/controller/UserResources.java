@@ -17,8 +17,9 @@ import petservice.Handler.HttpMessageNotReadableException;
 import petservice.Handler.MethodArgumentNotValidException;
 import petservice.Service.UserService;
 import petservice.model.Entity.UserEntity;
-import petservice.model.payload.request.ChangePassRequest;
-import petservice.model.payload.request.LoginRequest;
+import petservice.model.payload.request.UserResources.ChangePassRequest;
+import petservice.model.payload.request.UserResources.InfoUserRequest;
+import petservice.model.payload.request.Authentication.LoginRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
 import petservice.security.JWT.JwtUtils;
@@ -70,33 +71,33 @@ public class UserResources {
             throw new BadCredentialsException("access token is missing");
         }
     }
-//    @PutMapping("/info")
-//    @ResponseBody
-//    public ResponseEntity<SuccessResponse>  updateInfo(@RequestBody @Valid InfoUserRequest userInfo, BindingResult errors, HttpServletRequest request) throws Exception {
-//        String authorizationHeader = request.getHeader(AUTHORIZATION);
-//        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-//            String accessToken = authorizationHeader.substring("Bearer ".length());
-//
-//            if(jwtUtils.validateExpiredToken(accessToken) == true){
-//                throw new BadCredentialsException("access token is  expired");
-//            }
-//
-//            UserEntity user = userService.findByUsername(jwtUtils.getUserNameFromJwtToken(accessToken));
-//            user = userService.updateUserInfo(user,userInfo);
-//
-//            SuccessResponse response = new SuccessResponse();
-//            response.setStatus(HttpStatus.OK.value());
-//            response.setMessage("Update info successful");
-//            response.setSuccess(true);
-//            response.getData().put("userInfo",user);
-//
-//            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
-//        }
-//        else
-//        {
-//            throw new BadCredentialsException("access token is missing");
-//        }
-//    }
+    @PutMapping("/info")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse>  updateInfo(@RequestBody @Valid InfoUserRequest userInfo, BindingResult errors, HttpServletRequest request) throws Exception {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            if(jwtUtils.validateExpiredToken(accessToken) == true){
+                throw new BadCredentialsException("access token is  expired");
+            }
+
+            UserEntity user = userService.findByUsername(jwtUtils.getUserNameFromJwtToken(accessToken));
+            user = userService.updateUserInfo(user,userInfo);
+
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Update info successful");
+            response.setSuccess(true);
+            response.getData().put("userInfo",user);
+
+            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        }
+        else
+        {
+            throw new BadCredentialsException("access token is missing");
+        }
+    }
     @PutMapping("/info/password")
     @ResponseBody
     public ResponseEntity<SuccessResponse>  updatePassword(@RequestBody @Valid ChangePassRequest pass, BindingResult errors, HttpServletRequest request) throws Exception {

@@ -1,4 +1,4 @@
-package petservice.model.payload.request;
+package petservice.model.payload.request.UserResources;
 
 import lombok.*;
 

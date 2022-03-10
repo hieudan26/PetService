@@ -1,4 +1,4 @@
-package petservice.model.payload.request;
+package petservice.model.payload.request.Authentication;
 
 import lombok.*;
 
@@ -9,7 +9,9 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ReActiveRequest {
+public class LoginRequest {
     @NotEmpty
-    String email;
+    String username;
+    @NotEmpty
+    String password;
 }

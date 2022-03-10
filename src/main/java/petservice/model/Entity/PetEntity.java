@@ -1,5 +1,6 @@
 package petservice.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "\"Pet\"", schema = "\"public\"")
 public class PetEntity {
+    @JsonIgnore
     private String id;
     private String name;
     private String gender;
@@ -22,7 +24,7 @@ public class PetEntity {
     private BigInteger price;
     private List<ImagePetEntity> imagePetEntityList;
     private List<BillEntity> billEntityList;
-    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     public List<ImagePetEntity> getImagePetEntityList() {
         return imagePetEntityList;
     }
@@ -32,7 +34,7 @@ public class PetEntity {
     }
 
 
-    @OneToMany(mappedBy = "petSale", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "petSale", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     public List<BillEntity> getBillEntityList() {
         return billEntityList;
     }

@@ -16,10 +16,15 @@ class PetServiceApplicationTests {
     RoleRepository roleRepository;
     @Test
     void contextLoads() {
-        UserEntity user = new UserEntity("hieudankt ","hieudankt@gmail.com","123456789");
-
-        user = userService.saveUser(user,"USER");
-
+//        RoleEntity role = new RoleEntity();
+//        role.setName("ADMIN");
+//        roleRepository.save(role);
+        UserEntity user = new UserEntity();
+        user.setPassword("123456789");
+        user.setUserName("hieudankf");
+        user.setEmail("hieudankazf@gmail.com");
+        userService.saveUser(user,"ADMIN");
+        userService.deleteUser("hieudankf");
     }
 
 }

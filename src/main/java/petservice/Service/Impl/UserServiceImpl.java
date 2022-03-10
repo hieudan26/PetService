@@ -8,6 +8,7 @@ import petservice.Service.UserService;
 import petservice.mapping.UserMapping;
 import petservice.model.Entity.RoleEntity;
 import petservice.model.Entity.UserEntity;
+import petservice.model.payload.request.UserResources.InfoUserRequest;
 import petservice.repository.RoleRepository;
 import petservice.repository.UserRepository;
 
@@ -87,11 +88,17 @@ public class UserServiceImpl implements UserService {
          return userRepository.findByUserName(username).get();
     }
 
-//    @Override
-//    public UserEntity updateUserInfo(UserEntity user, InfoUserRequest userInfo) {
-//        user = UserMapping.UpdateUserInfoByUser(user,userInfo);
-//        return userRepository.save(user);
-//    }
+    @Override
+    public UserEntity findByEmail(String email) {
+        return userRepository.findByEmail(email).get();
+    }
+
+
+    @Override
+    public UserEntity updateUserInfo(UserEntity user, InfoUserRequest userInfo) {
+        user = UserMapping.UpdateUserInfoByUser(user,userInfo);
+        return userRepository.save(user);
+    }
 
     @Override
     public UserEntity updateUserPassword(UserEntity user, String password) {
@@ -100,14 +107,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity deleteUser(String username) {
+    public Integer deleteUser(String username) {
         UserEntity user = findByUsername(username);
-        return userRepository.deleteById(user.getId()).get();
+        return userRepository.deleteById(user.getId());
     }
 
     @Override
     public UserEntity updateActive(UserEntity user) {
-        user.setStatus(!user.isStatus());
+        user.setActive(true);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public UserEntity setStatus(UserEntity user,Boolean status) {
+        user.setStatus(status);
         return userRepository.save(user);
     }
 }

@@ -1,5 +1,6 @@
 package petservice.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -9,6 +10,7 @@ import java.math.BigInteger;
 @Entity
 @Table(name ="\"Bill\"", schema ="\"public\"")
 public class BillEntity {
+    @JsonIgnore
     private String id;
     private String methodPayment;
     private BigInteger price;

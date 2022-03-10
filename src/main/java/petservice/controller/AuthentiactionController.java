@@ -25,10 +25,10 @@ import petservice.Service.EmailService;
 import petservice.Service.UserService;
 import petservice.mapping.UserMapping;
 import petservice.model.Entity.UserEntity;
-import petservice.model.payload.request.LoginRequest;
-import petservice.model.payload.request.ReActiveRequest;
-import petservice.model.payload.request.RefreshTokenRequest;
-import petservice.model.payload.request.RegisterRequest;
+import petservice.model.payload.request.Authentication.LoginRequest;
+import petservice.model.payload.request.Authentication.ReActiveRequest;
+import petservice.model.payload.request.Authentication.RefreshTokenRequest;
+import petservice.model.payload.request.Authentication.RegisterRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
 import petservice.security.DTO.AppUserDetail;
@@ -119,9 +119,14 @@ public class AuthentiactionController {
             return SendErrorValid("password","password is not matched","Wrong password");
         }
 
-        if(!loginUser.isStatus()){
+        if(!loginUser.isActive()){
             return SendErrorValid("active","Your account haven't activated","Unactivated account");
         }
+
+        if(!loginUser.isStatus()){
+            return SendErrorValid("status","Your account is banned","Banned account");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -214,7 +219,7 @@ public class AuthentiactionController {
                 throw new RecordNotFoundException("Not found, please register again");
             }
 
-            if(user.isStatus() == true){
+            if(user.isActive() == true){
                 throw new RecordNotFoundException("user already has been actived!");
             }
 

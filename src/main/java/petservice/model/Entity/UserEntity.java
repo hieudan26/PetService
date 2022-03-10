@@ -1,10 +1,15 @@
 package petservice.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,23 +17,28 @@ import java.util.Set;
 @Entity
 @Table(name = "\"User\"", schema = "\"public\"")
 public class UserEntity {
+    @JsonIgnore
     private String id;
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
     private String userName;
+    @JsonIgnore
     private String password;
     private String avatar;
     private boolean status;
-    private Date createAt;
-    private Date update;
+    private boolean active;
+    private LocalDateTime createAt;
+    private LocalDateTime update;
     private AddressEntity address;
     private Set<RoleEntity> roles;
+    @JsonIgnore
     private List<BillEntity> billEntityList;
+    @JsonIgnore
     private List<BookingServiceEntity> bookingServiceEntityList;
 
-    @OneToMany(mappedBy = "userBuyPet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userBuyPet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<BillEntity> getBillEntityList() {
         return billEntityList;
     }
@@ -37,7 +47,7 @@ public class UserEntity {
         this.billEntityList = billEntityList;
     }
 
-    @OneToMany(mappedBy = "userBookService", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userBookService", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     public List<BookingServiceEntity> getBookingServiceEntityList() {
         return bookingServiceEntityList;
     }
@@ -53,6 +63,10 @@ public class UserEntity {
         this.email = email;
         this.userName = userName;
         this.password = password;
+        this.active = false;
+        this.status = true;
+        this.createAt = LocalDateTime.now(ZoneId.of("GMT+08:00"));
+        this.update = LocalDateTime.now(ZoneId.of("GMT+08:00"));
     }
 
     @Nullable
@@ -66,7 +80,7 @@ public class UserEntity {
         this.address = address;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="\"User_Role\"",joinColumns = @JoinColumn(name="\"UserId\""),inverseJoinColumns = @JoinColumn(name="\"RoleId\""))
     public Set<RoleEntity> getRoles() { return roles; }
     public void setRoles(Set<RoleEntity> roles) { this.roles = roles; }
@@ -165,22 +179,31 @@ public class UserEntity {
     }
 
     @Basic
+    @Column(name = "\"Active\"")
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    @Basic
     @Column(name = "\"CreateAt\"")
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Date createAt) {
+    public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
 
     @Basic
     @Column(name = "\"Update\"")
-    public Date getUpdate() {
+    public LocalDateTime getUpdate() {
         return update;
     }
 
-    public void setUpdate(Date update) {
+    public void setUpdate(LocalDateTime update) {
         this.update = update;
     }
 

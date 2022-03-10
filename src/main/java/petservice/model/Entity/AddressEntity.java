@@ -1,5 +1,6 @@
 package petservice.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -8,13 +9,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "\"Address\"", schema = "\"public\"")
 public class AddressEntity {
+    @JsonIgnore
     private String id;
     private String houseNumber;
     private String streetName;
     private String city;
     private String province;
     private String country;
-    private UserEntity userAdress;
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -26,15 +28,6 @@ public class AddressEntity {
     public void setId(String id) {
         this.id = id;
     }
-    @OneToOne(mappedBy = "address")
-    public UserEntity getUserAdress() {
-        return userAdress;
-    }
-
-    public void setUserAdress(UserEntity userAdress) {
-        this.userAdress = userAdress;
-    }
-
     @Basic
     @Column(name = "\"HouseNumber\"")
     public String getHouseNumber() {

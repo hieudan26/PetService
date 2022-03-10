@@ -17,8 +17,9 @@ import petservice.Service.RoleService;
 import petservice.Service.UserService;
 import petservice.mapping.UserMapping;
 import petservice.model.Entity.UserEntity;
-import petservice.model.payload.request.RegisterAdminRequest;
-import petservice.model.payload.request.RoleToUserRequest;
+import petservice.model.payload.request.UserResources.RegisterAdminRequest;
+import petservice.model.payload.request.UserResources.RoleToUserRequest;
+import petservice.model.payload.request.UserResources.StatusRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
 
@@ -42,12 +43,18 @@ public class AdminResource {
 
     @GetMapping("/users")
     @ResponseBody
-    public ResponseEntity<List<UserEntity>> getUsers() {
+    public ResponseEntity<SuccessResponse> getUsers() {
+
         List<UserEntity> userList = userService.getUsers();
         if(userList == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
-        return new ResponseEntity<List<UserEntity>>(userList, HttpStatus.OK);
+        SuccessResponse response = new SuccessResponse();
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("list users");
+        response.setSuccess(true);
+        response.getData().put("users",userList);
+        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
     }
 
     @PostMapping("user/save")
@@ -82,6 +89,40 @@ public class AdminResource {
             response.setMessage("add user successful");
             response.setSuccess(true);
             response.getData().put("email",user.getEmail());
+            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+
+        }catch(Exception ex){
+            throw new Exception("Can't create your account");
+        }
+    }
+
+    @PostMapping("user/ban")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> setStatusUser(@RequestBody @Valid StatusRequest request, BindingResult errors) throws  Exception {
+        if (errors.hasErrors()) {
+            throw new MethodArgumentNotValidException(errors);
+        }
+        if (request == null) {
+            LOGGER.info("Inside addIssuer, adding: " + request.toString());
+            throw new HttpMessageNotReadableException("Missing field");
+        } else {
+            LOGGER.info("Inside addIssuer...");
+        }
+
+        if(!userService.existsByEmail(request.getEmail())){
+            return SendErrorValid("email",request.getEmail());
+        }
+
+        try{
+
+            UserEntity user = userService.findByEmail(request.getEmail());
+            userService.setStatus(user,request.getStatus());
+
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Change status successful");
+            response.setSuccess(true);
+            response.getData().put("user",user);
             return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
 
         }catch(Exception ex){

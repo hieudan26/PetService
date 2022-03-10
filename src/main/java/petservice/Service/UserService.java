@@ -4,6 +4,7 @@ package petservice.Service;
 import org.springframework.stereotype.Component;
 import petservice.model.Entity.RoleEntity;
 import petservice.model.Entity.UserEntity;
+import petservice.model.payload.request.UserResources.InfoUserRequest;
 
 
 import java.util.List;
@@ -18,8 +19,10 @@ public interface UserService {
     Boolean existsByEmail(String email);
     Boolean existsByUsername(String username);
     UserEntity findByUsername(String username);
-    //UserEntity updateUserInfo(UserEntity user, InfoUserRequest userInfo);
+    UserEntity findByEmail(String email);
+    UserEntity updateUserInfo(UserEntity user, InfoUserRequest userInfo);
     UserEntity updateUserPassword(UserEntity user, String password);
-    UserEntity deleteUser(String username);
+    Integer deleteUser(String username);
     UserEntity updateActive(UserEntity user);
+    UserEntity setStatus(UserEntity user,Boolean status);
 }

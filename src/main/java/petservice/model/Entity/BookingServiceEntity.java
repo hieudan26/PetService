@@ -1,5 +1,6 @@
 package petservice.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "\"BookingService\"", schema = "public")
 public class BookingServiceEntity {
+    @JsonIgnore
     private String id;
     private Date dateBooking;
     private boolean status;
