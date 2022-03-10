@@ -3,6 +3,7 @@ package petservice.Service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import petservice.Service.UserService;
 import petservice.mapping.UserMapping;
@@ -23,6 +24,12 @@ public class UserServiceImpl implements UserService {
 
     final UserRepository userRepository;
     final RoleRepository roleRepository;
+
+    @Override
+    public List<UserEntity> getAllUser(Pageable pageable) {
+        return userRepository.findAllByIdNotNull(pageable);
+    }
+
     @Override
     public UserEntity saveUser(UserEntity user, String roleName) {
         Optional<RoleEntity> role = roleRepository.findByName(roleName);

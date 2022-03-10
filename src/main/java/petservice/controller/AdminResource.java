@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,9 +46,11 @@ public class AdminResource {
 
     @GetMapping("/users")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getUsers() {
+    public ResponseEntity<SuccessResponse> getUsers(  @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "3") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("CreateAt"));
 
-        List<UserEntity> userList = userService.getUsers();
+        List<UserEntity> userList = userService.getAllUser(pageable);
         if(userList == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
