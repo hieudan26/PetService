@@ -1,6 +1,8 @@
 package petservice.mapping;
 
 import petservice.model.Entity.ServiceEntity;
+import petservice.model.payload.request.ServiceResources.AddServiceRequest;
+import petservice.model.payload.request.ServiceResources.InfoServiceRequest;
 
 import java.math.BigInteger;
 

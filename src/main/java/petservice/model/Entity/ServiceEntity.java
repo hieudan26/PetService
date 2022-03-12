@@ -10,7 +10,6 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "\"Service\"", schema = "\"public\"")
 public class ServiceEntity {
-    @JsonIgnore
     private String id;
     private String name;
     private String description;
