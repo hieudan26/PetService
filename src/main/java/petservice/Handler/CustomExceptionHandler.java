@@ -50,7 +50,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         for (FieldError fieldError : result.getFieldErrors()) {
             details.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        ErrorResponseMap error = new ErrorResponseMap("Validation Error: ", details,HttpStatus.BAD_REQUEST.value());
+        ErrorResponseMap error = new ErrorResponseMap(ex.getBindingResult().getFieldError().getDefaultMessage(), details,HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -58,7 +58,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
-        ErrorResponse error = new ErrorResponse("JSON parse error", details,HttpStatus.BAD_REQUEST.value());
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), details,HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -66,7 +66,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
-        ErrorResponse error = new ErrorResponse("Authentication error", details,HttpStatus.UNAUTHORIZED.value());
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), details,HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity(error, HttpStatus.UNAUTHORIZED);
     }
     @Override
