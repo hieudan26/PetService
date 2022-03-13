@@ -171,7 +171,7 @@ public class ServiceResource {
     private ResponseEntity SendErrorValid(String field, String message){
         ErrorResponseMap errorResponseMap = new ErrorResponseMap();
         Map<String,String> temp =new HashMap<>();
-        errorResponseMap.setMessage("Field already taken");
+        errorResponseMap.setMessage(field+" already taken");
         temp.put(field,message+" has already used");
         errorResponseMap.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponseMap.setDetails(temp);
@@ -183,7 +183,7 @@ public class ServiceResource {
     private ResponseEntity SendErrorValid(String field, String message, String field_already_taken){
         ErrorResponseMap errorResponseMap = new ErrorResponseMap();
         Map<String,String> temp =new HashMap<>();
-        errorResponseMap.setMessage("Field already taken");
+        errorResponseMap.setMessage(field+" already taken");
         temp.put(field,message+" has already used");
         errorResponseMap.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponseMap.setDetails(temp);
