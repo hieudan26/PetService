@@ -52,10 +52,20 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/admin/**").hasAnyAuthority(UserPermission.ADMIN_READ.getPermission())
-                .antMatchers(HttpMethod.POST,"/api/admin/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
-                .antMatchers(HttpMethod.GET,"/api/user/**").hasAnyAuthority(UserPermission.USER_READ.getPermission(), UserPermission.ADMIN_READ.getPermission())
-                .antMatchers(HttpMethod.POST,"/api/user/**").hasAnyAuthority(UserPermission.USER_WRITE.getPermission(), UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers("/api/user/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+
+                .antMatchers(HttpMethod.GET,"/api/account/**").hasAnyAuthority(UserPermission.USER_READ.getPermission(), UserPermission.ADMIN_READ.getPermission())
+                .antMatchers(HttpMethod.POST,"/api/account/**").hasAnyAuthority(UserPermission.USER_WRITE.getPermission(), UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers(HttpMethod.PUT,"/api/account/**").hasAnyAuthority(UserPermission.USER_WRITE.getPermission(), UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/account/**").hasAnyAuthority(UserPermission.USER_WRITE.getPermission(), UserPermission.ADMIN_WRITE.getPermission())
+
+                .antMatchers(HttpMethod.PUT,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers(HttpMethod.POST,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+
+                .antMatchers(HttpMethod.PUT,"/api/pet/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers(HttpMethod.POST,"/api/pet/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/pet/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
                 .anyRequest().permitAll();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

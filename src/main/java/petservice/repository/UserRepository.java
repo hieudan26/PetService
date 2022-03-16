@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @EnableJpaRepositories
-public interface UserRepository extends JpaRepository<UserEntity,Integer> {
+public interface UserRepository extends JpaRepository<UserEntity,String> {
     List<UserEntity> findAllByIdNotNull(Pageable pageable);
     Optional<UserEntity> findByUserName(String username);
     Optional<UserEntity> findByEmail(String email);
     Boolean existsByUserName(String username);
     Boolean existsByEmail(String email);
-    Integer deleteById(String id);
+    void deleteById(String id);
 }

@@ -21,10 +21,13 @@ public interface UserService {
     Boolean existsByEmail(String email);
     Boolean existsByUsername(String username);
     UserEntity findByUsername(String username);
+    UserEntity findById(String id);
     UserEntity findByEmail(String email);
     UserEntity updateUserInfo(UserEntity user, InfoUserRequest userInfo);
     UserEntity updateUserPassword(UserEntity user, String password);
-    Integer deleteUser(String username);
+    void deleteUserByUsername(String username);
+    void deleteUserById(String id);
+    void deleteUsersById(String[] ids);
     UserEntity updateActive(UserEntity user);
     UserEntity setStatus(UserEntity user,Boolean status);
 }

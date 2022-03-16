@@ -79,11 +79,14 @@ public class ServiceServiceImple implements ServiceService {
         serviceRepository.deleteById(service.getId());
         return null;
     }
-
     @Override
-    public void deleteSevice(String[] ids) {
-        for(String id: ids){
+    public void deleteSevice(String id) {
             serviceRepository.deleteById(id);
+    }
+    @Override
+    public void deleteSevices(String[] ids) {
+        for(String id: ids){
+            deleteSevice(id);
         }
     }
 }

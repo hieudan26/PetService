@@ -20,22 +20,24 @@ import petservice.Service.RoleService;
 import petservice.Service.UserService;
 import petservice.mapping.UserMapping;
 import petservice.model.Entity.UserEntity;
+import petservice.model.payload.request.PetResources.DeletePetsRequest;
 import petservice.model.payload.request.UserResources.RegisterAdminRequest;
 import petservice.model.payload.request.UserResources.RoleToUserRequest;
 import petservice.model.payload.request.UserResources.StatusRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/admin")
+@RequestMapping("api/user")
 @RequiredArgsConstructor
-public class AdminResource {
-    private static final Logger LOGGER = LogManager.getLogger(AdminResource.class);
+public class UserResource {
+    private static final Logger LOGGER = LogManager.getLogger(UserResource.class);
 
     private final UserService userService;
     private final RoleService roleService;
@@ -44,7 +46,7 @@ public class AdminResource {
     AuthenticationManager authenticationManager;
 
 
-    @GetMapping("/users")
+    @GetMapping("")
     @ResponseBody
     public ResponseEntity<SuccessResponse> getUsers(  @RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "3") int size) {
@@ -62,7 +64,23 @@ public class AdminResource {
         return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
     }
 
-    @PostMapping("user/save")
+    @GetMapping("{id}")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> getUser( @PathVariable("id") String id) {
+
+        UserEntity user = userService.findById(id);
+        if(user == null) {
+            throw new RecordNotFoundException("No UserEntity existing " );
+        }
+        SuccessResponse response = new SuccessResponse();
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("list users");
+        response.setSuccess(true);
+        response.getData().put("user",user);
+        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("")
     @ResponseBody
     public ResponseEntity<SuccessResponse> saveUser(@RequestBody @Valid RegisterAdminRequest user, BindingResult errors) throws  Exception {
         if (errors.hasErrors()) {
@@ -101,7 +119,7 @@ public class AdminResource {
         }
     }
 
-    @PostMapping("user/ban")
+    @PutMapping("/status")
     @ResponseBody
     public ResponseEntity<SuccessResponse> setStatusUser(@RequestBody @Valid StatusRequest request, BindingResult errors) throws  Exception {
         if (errors.hasErrors()) {
@@ -135,7 +153,7 @@ public class AdminResource {
         }
     }
 
-    @PostMapping("role/addtouser")
+    @PostMapping("/role")
     @ResponseBody
     public ResponseEntity<SuccessResponse> addRoleToUser(@RequestBody @Valid RoleToUserRequest roleForm, BindingResult errors) throws  Exception  {
         if (errors.hasErrors()) {
@@ -171,6 +189,35 @@ public class AdminResource {
             throw new Exception("Can't add role to account");
         }
     }
+
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> deleteUsers(@PathVariable("id") String id, HttpServletRequest request) throws Exception {
+
+        userService.deleteUserById(id);
+        SuccessResponse response = new SuccessResponse();
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("delete successful");
+        response.setSuccess(true);
+        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+    }
+
+    @DeleteMapping("")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> deleteUser(@RequestBody @Valid DeletePetsRequest deleteRequest, BindingResult errors, HttpServletRequest request) throws Exception {
+        if (errors.hasErrors()) {
+            throw new MethodArgumentNotValidException(errors);
+        }
+
+        userService.deleteUsersById(deleteRequest.getIds());
+        SuccessResponse response = new SuccessResponse();
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("delete successful");
+        response.setSuccess(true);
+        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+    }
+
 
     private ResponseEntity SendErrorValid(String field, String message){
         ErrorResponseMap errorResponseMap = new ErrorResponseMap();

@@ -71,7 +71,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getUser(String email) {
         log.info("Fetching user {}",email);
-        return userRepository.findByEmail(email).get();
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        if(user.isEmpty())
+            return null;
+        return user.get();
     }
 
     @Override
@@ -114,9 +117,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer deleteUser(String username) {
+    public void deleteUserByUsername(String username) {
         UserEntity user = findByUsername(username);
-        return userRepository.deleteById(user.getId());
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void deleteUserById(String id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteUsersById(String[] ids) {
+        for (String id: ids
+             ) {
+            deleteUserById(id);
+        }
+    }
+
+    @Override
+    public UserEntity findById(String id) {
+        Optional<UserEntity> user = userRepository.findById(id);
+        if(user.isEmpty())
+            return null;
+        return user.get();
     }
 
     @Override

@@ -19,5 +19,6 @@ public interface ServiceService {
     ServiceEntity findById(String id);
     ServiceEntity setStatus(ServiceEntity service,Boolean status);
     Integer deleteService(String name);
-    void deleteSevice(String[] ids);
+    void deleteSevice(String id);
+    void deleteSevices(String[] ids);
 }
