@@ -1,6 +1,7 @@
 package petservice.model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -31,6 +32,7 @@ public class BillEntity {
 
     @ManyToOne
     @JoinColumn(name = "\"IdPet\"")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public PetEntity getPetSale() {
         return petSale;
     }
