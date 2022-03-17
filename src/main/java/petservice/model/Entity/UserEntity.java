@@ -64,8 +64,8 @@ public class UserEntity {
         this.password = password;
         this.active = false;
         this.status = true;
-        this.createAt = LocalDateTime.now(ZoneId.of("GMT+08:00"));
-        this.update = LocalDateTime.now(ZoneId.of("GMT+08:00"));
+        this.createAt = LocalDateTime.now(ZoneId.of("GMT+07:00"));
+        this.update = LocalDateTime.now(ZoneId.of("GMT+07:00"));
     }
 
     @Nullable

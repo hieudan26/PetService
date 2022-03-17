@@ -13,8 +13,8 @@ public class BookingServiceEntity {
     @JsonIgnore
     private String id;
     private Date dateBooking;
-    private boolean status;
-    private String methodPayment;
+    private boolean payment;
+    private String status;
     private UserEntity userBookService;
     private ServiceEntity service;
 
@@ -62,23 +62,23 @@ public class BookingServiceEntity {
     }
 
     @Basic
-    @Column(name = "\"Status\"")
-    public boolean isStatus() {
-        return status;
+    @Column(name = "\"Payment\"")
+    public boolean isPayment() {
+        return payment;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setPayment(boolean payment) {
+        this.payment = payment;
     }
 
     @Basic
-    @Column(name = "\"MethodPayment\"")
-    public String getMethodPayment() {
-        return methodPayment;
+    @Column(name = "\"Status\"")
+    public String getStatus() {
+        return status;
     }
 
-    public void setMethodPayment(String methodPayment) {
-        this.methodPayment = methodPayment;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class BookingServiceEntity {
         if (status != that.status) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (dateBooking != null ? !dateBooking.equals(that.dateBooking) : that.dateBooking != null) return false;
-        if (methodPayment != null ? !methodPayment.equals(that.methodPayment) : that.methodPayment != null)
+        if (status != null ? !status.equals(that.status) : that.status != null)
             return false;
 
         return true;
@@ -101,8 +101,8 @@ public class BookingServiceEntity {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (dateBooking != null ? dateBooking.hashCode() : 0);
-        result = 31 * result + (status ? 1 : 0);
-        result = 31 * result + (methodPayment != null ? methodPayment.hashCode() : 0);
+        result = 31 * result + (payment ? 1 : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
 }
