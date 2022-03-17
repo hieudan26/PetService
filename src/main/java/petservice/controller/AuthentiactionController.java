@@ -73,11 +73,11 @@ public class AuthentiactionController {
         }
 
         if(userService.existsByEmail(user.getEmail())){
-            return SendErrorValid("email",user.getEmail()+"\" has already used\"","Field already taken");
+            return SendErrorValid("email",user.getEmail()+"\" has already used\"","email "+user.getEmail()+"\" has already used\"");
         }
 
         if(userService.existsByUsername(user.getUsername())){
-            return SendErrorValid("username",user.getUsername()+"\" has already used\"","Field already taken");
+            return SendErrorValid("username",user.getUsername()+"\" has already used\"","username "+user.getUsername()+"\" has already used\"");
         }
 
         try{
@@ -116,7 +116,7 @@ public class AuthentiactionController {
         UserEntity loginUser = userService.findByUsername(user.getUsername());
 
         if(!(passwordEncoder.matches(user.getPassword(),loginUser.getPassword()))){
-            return SendErrorValid("password","password is not matched","Wrong password");
+            return SendErrorValid("password","password is not matched","password is not matched");
         }
 
         if(!loginUser.isActive()){

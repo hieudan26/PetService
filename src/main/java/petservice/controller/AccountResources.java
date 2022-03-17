@@ -32,10 +32,10 @@ import java.util.Map;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/account")
 @RequiredArgsConstructor
-public class UserResources {
-    private static final Logger LOGGER = LogManager.getLogger(AdminResource.class);
+public class AccountResources {
+    private static final Logger LOGGER = LogManager.getLogger(AccountResources.class);
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -45,7 +45,7 @@ public class UserResources {
     @Autowired
     JwtUtils jwtUtils;
 
-    @GetMapping("/info")
+    @GetMapping("")
     @ResponseBody
     public ResponseEntity<SuccessResponse>  getInfo(HttpServletRequest request) throws Exception {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -71,7 +71,7 @@ public class UserResources {
             throw new BadCredentialsException("access token is missing");
         }
     }
-    @PutMapping("/info")
+    @PutMapping("")
     @ResponseBody
     public ResponseEntity<SuccessResponse>  updateInfo(@RequestBody @Valid InfoUserRequest userInfo, BindingResult errors, HttpServletRequest request) throws Exception {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -98,7 +98,7 @@ public class UserResources {
             throw new BadCredentialsException("access token is missing");
         }
     }
-    @PutMapping("/info/password")
+    @PutMapping("/password")
     @ResponseBody
     public ResponseEntity<SuccessResponse>  updatePassword(@RequestBody @Valid ChangePassRequest pass, BindingResult errors, HttpServletRequest request) throws Exception {
         if (errors.hasErrors()) {
@@ -172,7 +172,7 @@ public class UserResources {
                 throw new BadCredentialsException("username or password is not matched");
             }
 
-            userService.deleteUser(username);
+            userService.deleteUserByUsername(username);
 
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
@@ -189,7 +189,7 @@ public class UserResources {
     private ResponseEntity SendErrorValid(String field, String message){
         ErrorResponseMap errorResponseMap = new ErrorResponseMap();
         Map<String,String> temp =new HashMap<>();
-        errorResponseMap.setMessage("Field already taken");
+        errorResponseMap.setMessage(field+" already taken");
         temp.put(field,message+" has already used");
         errorResponseMap.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponseMap.setDetails(temp);

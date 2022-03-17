@@ -7,7 +7,7 @@ import petservice.model.Entity.RoleEntity;
 import java.util.Optional;
 
 @EnableJpaRepositories
-public interface RoleRepository extends JpaRepository<RoleEntity,Integer> {
+public interface RoleRepository extends JpaRepository<RoleEntity,String> {
     Optional<RoleEntity> findByName(String roleName);
     Boolean existsByName(String roleName);
 }

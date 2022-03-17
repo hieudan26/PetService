@@ -17,7 +17,6 @@ import java.util.Set;
 @Entity
 @Table(name = "\"User\"", schema = "\"public\"")
 public class UserEntity {
-    @JsonIgnore
     private String id;
     private String firstName;
     private String lastName;
