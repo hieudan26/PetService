@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 @RestResource(exported=false)
 @Entity
@@ -12,7 +13,7 @@ import java.util.Date;
 public class BookingServiceEntity {
     @JsonIgnore
     private String id;
-    private Date dateBooking;
+    private LocalDateTime dateBooking;
     private boolean payment;
     private String status;
     private UserEntity userBookService;
@@ -53,11 +54,11 @@ public class BookingServiceEntity {
 
     @Basic
     @Column(name = "\"DateBooking\"")
-    public Date getDateBooking() {
+    public LocalDateTime getDateBooking() {
         return dateBooking;
     }
 
-    public void setDateBooking(Date dateBooking) {
+    public void setDateBooking(LocalDateTime dateBooking) {
         this.dateBooking = dateBooking;
     }
 
