@@ -7,6 +7,8 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+
 @RestResource(exported=false)
 @Entity
 @Table(name ="\"Bill\"", schema ="\"public\"")
@@ -17,9 +19,7 @@ public class BillEntity {
     private BigInteger price;
     private UserEntity userBuyPet;
     private PetEntity petSale;
-
-
-
+    private LocalDateTime paymentDate;
     @ManyToOne
     @JoinColumn(name = "\"IdUser\"")
     public UserEntity getUserBuyPet() {
@@ -70,6 +70,16 @@ public class BillEntity {
 
     public void setPrice(BigInteger price) {
         this.price = price;
+    }
+
+    @Basic
+    @Column(name ="\"PaymentDate\"")
+    public LocalDateTime getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDateTime paymentDate) {
+        this.paymentDate = paymentDate;
     }
 
     @Override

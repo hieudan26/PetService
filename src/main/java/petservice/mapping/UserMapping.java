@@ -26,7 +26,7 @@ public class UserMapping {
     }
 
     public static UserEntity UpdateUserInfoByUser(UserEntity user, InfoUserRequest userInfo) {
-        user.setUpdate(LocalDateTime.now(ZoneId.of("GMT+08:00")));
+        user.setUpdate(LocalDateTime.now(ZoneId.of("GMT+07:00")));
         user.setFirstName(userInfo.getFirstName());
         user.setLastName(userInfo.getLastName());
         user.setAvatar(userInfo.getAvatar());

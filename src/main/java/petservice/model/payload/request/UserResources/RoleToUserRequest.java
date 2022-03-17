@@ -20,15 +20,15 @@ public class RoleToUserRequest {
         return email;
     }
 
-    public void setEmail(String name) {
-        this.email = name;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(String desc) {
+    public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 }

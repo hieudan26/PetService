@@ -104,7 +104,7 @@ public class UserResource {
         try{
 
             UserEntity newUser = UserMapping.registerToEntity(user);
-            newUser.setStatus(true);
+            newUser.setActive(true);
             userService.saveUser(newUser,user.getRoles());
 
             SuccessResponse response = new SuccessResponse();
@@ -171,7 +171,7 @@ public class UserResource {
             throw new HttpMessageNotReadableException("UserEntity is not exist");
         }
 
-        if(roleService.existsByRoleName(roleForm.getRoleName())){
+        if(!roleService.existsByRoleName(roleForm.getRoleName())){
             throw new HttpMessageNotReadableException("Role is not exist");
         }
         try{
