@@ -62,6 +62,11 @@ public class ServiceServiceImple implements ServiceService {
     }
 
     @Override
+    public ServiceEntity findByNameContainning(String name) {
+        return serviceRepository.findByNameContaining(name).get();
+    }
+
+    @Override
     public ServiceEntity findById(String id) {
         return serviceRepository.findById(id).get();
     }
