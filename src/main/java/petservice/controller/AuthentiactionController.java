@@ -34,7 +34,9 @@ import petservice.model.payload.response.SuccessResponse;
 import petservice.security.DTO.AppUserDetail;
 import petservice.security.JWT.JwtUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -103,7 +105,7 @@ public class AuthentiactionController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<SuccessResponse>  Sigin(@RequestBody @Valid LoginRequest user, BindingResult errors) throws Exception {
+    public ResponseEntity<SuccessResponse>  Sigin(@RequestBody @Valid LoginRequest user, BindingResult errors, HttpServletResponse resp) throws Exception {
 
         if (errors.hasErrors()) {
             throw new MethodArgumentNotValidException(errors);
@@ -142,8 +144,15 @@ public class AuthentiactionController {
         response.setMessage("Login successful");
         response.setSuccess(true);
 
+        Cookie cookieAccessToken = new Cookie("accessToken", accessToken);
+        Cookie cookieRefreshToken = new Cookie("refreshToken", refreshToken);
+
+        resp.addCookie(cookieAccessToken);
+        resp.addCookie(cookieRefreshToken);
+
         response.getData().put("accessToken",accessToken);
         response.getData().put("refreshToken",refreshToken);
+
 //        response.getData().put("name",loginUser.getTenhienthi());
 //        response.getData().put("image",loginUser.getImage());
 //        response.getData().put("roles",userDetails.getRoles());
