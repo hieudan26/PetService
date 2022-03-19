@@ -95,12 +95,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity findByUsername(String username) {
-         return userRepository.findByUserName(username).get();
+        Optional<UserEntity> user = userRepository.findByUserName(username);
+        if(user.isEmpty())
+            return null;
+         return user.get();
     }
 
     @Override
     public UserEntity findByEmail(String email) {
-        return userRepository.findByEmail(email).get();
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        if(user.isEmpty())
+            return null;
+        return user.get();
     }
 
 

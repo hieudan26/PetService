@@ -202,6 +202,49 @@ public class AuthentiactionController {
         }
     }
 
+    @PostMapping("/refreshtokencookie")
+    public ResponseEntity<SuccessResponse> refreshTokenCookie(@CookieValue("refreshToken") String refreshToken, HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            if(jwtUtils.validateExpiredToken(accessToken) == false){
+                throw new BadCredentialsException("access token is not expired");
+            }
+
+            if(jwtUtils.validateExpiredToken(refreshToken) == true){
+                throw new BadCredentialsException("refresh token is expired");
+            }
+
+            if(refreshToken == null){
+                throw new BadCredentialsException("refresh token is missing");
+            }
+
+            if(!jwtUtils.getUserNameFromJwtToken(refreshToken).equals(jwtUtils.getUserNameFromJwtToken(refreshToken))){
+                throw new BadCredentialsException("two token are not a pair");
+            }
+
+
+            AppUserDetail userDetails =  AppUserDetail.build(userService.findByUsername(jwtUtils.getUserNameFromJwtToken(refreshToken)));
+
+            accessToken = jwtUtils.generateJwtToken(userDetails);
+
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Login successful");
+            response.setSuccess(true);
+
+            response.getData().put("accessToken",accessToken);
+            response.getData().put("refreshToken",refreshToken);
+
+            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        }
+        else
+        {
+            throw new BadCredentialsException("access token is missing");
+        }
+    }
+
     private ResponseEntity SendErrorValid(String field, String message,String title){
         ErrorResponseMap errorResponseMap = new ErrorResponseMap();
         Map<String,String> temp =new HashMap<>();
