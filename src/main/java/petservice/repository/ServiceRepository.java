@@ -13,7 +13,7 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, String> 
     List<ServiceEntity> findAllByIdNotNull(Pageable pageable);
     Optional<ServiceEntity> findByName(String name);
     Optional<ServiceEntity> findById(String id);
-    Optional<ServiceEntity> findByNameContaining(String name);
+    List<ServiceEntity> findAllByNameContaining(String name);
     Boolean existsByName(String name);
     void deleteById(String id);
 }

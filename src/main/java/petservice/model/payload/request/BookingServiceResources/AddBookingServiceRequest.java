@@ -1,10 +1,8 @@
 package petservice.model.payload.request.BookingServiceResources;
 
 import lombok.*;
-import org.aspectj.bridge.Message;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,9 +11,9 @@ import java.time.LocalDateTime;
 @Data
 public class AddBookingServiceRequest {
     @NotEmpty(message = "Thiếu ngày hẹn")
-    private LocalDateTime dateBooking;
+    private String dateBooking;
     @NotEmpty(message = "Thiếu tên user")
     private String userBookService;
-    @NotEmpty(message = "Thiếu tên service")
-    private String serviceName;
+    @NotEmpty(message = "Thiếu service id")
+    private String serviceId;
 }

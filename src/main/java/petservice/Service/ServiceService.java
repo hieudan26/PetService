@@ -16,7 +16,7 @@ public interface ServiceService {
     List<ServiceEntity> getServices();
     Boolean existsByName(String name);
     ServiceEntity findByName(String name);
-    ServiceEntity findByNameContainning(String name);
+    List<ServiceEntity> findByNameContainning(String name);
     ServiceEntity findById(String id);
     ServiceEntity setStatus(ServiceEntity service,Boolean status);
     Integer deleteService(String name);

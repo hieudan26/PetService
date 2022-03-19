@@ -4,7 +4,8 @@ package petservice.model.payload.request.ServiceResources;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 
 @Data
 @NoArgsConstructor
@@ -14,9 +15,10 @@ import javax.validation.constraints.Size;
 public class AddServiceRequest {
     @NotEmpty(message = "Thiếu Name")
     private String name;
-
-    private String price;
     private String description;
-    private String slot;
-    private String status;
+    @NotNull(message = "Thiếu giá")
+    private BigInteger price;
+    @NotNull(message = "Thiếu slot")
+    private BigInteger slot;
+    private Boolean status;
 }

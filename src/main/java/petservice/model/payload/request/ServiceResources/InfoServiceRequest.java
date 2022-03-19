@@ -2,6 +2,10 @@ package petservice.model.payload.request.ServiceResources;
 
 import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
+
 @Getter
 @Setter
 //@NoArgsConstructor annotation sẽ sinh ra một constructor mặc định không chứa các tham số đầu vào. Mặc định constructor này là public.
@@ -10,9 +14,13 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class InfoServiceRequest {
+    @NotEmpty(message = "Thiếu Name")
     private String name;
     private String description;
-    private String  price;
-    private String slot;
-    private String status;
+    @NotNull(message = "Thiếu giá")
+    private BigInteger price;
+    @NotNull(message = "Thiếu slot")
+    private BigInteger slot;
+    @NotNull(message = "Thiếu status")
+    private Boolean status;
 }

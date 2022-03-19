@@ -12,6 +12,7 @@ import petservice.repository.ServiceRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 //@RequiredArgsConstructor sẽ sinh ra một constructor với các tham số bắt buộc phải có giá trị. Các thuộc tính final và các thuộc tính được đánh dấu @NonNull sẽ bị bắt buộc phải chứa giá trị trong constructor.
@@ -58,17 +59,25 @@ public class ServiceServiceImple implements ServiceService {
 
     @Override
     public ServiceEntity findByName(String name) {
-        return serviceRepository.findByName(name).get();
+        Optional<ServiceEntity> service = serviceRepository.findByName(name);
+        if (service.isEmpty()){
+            return  null;
+        }
+        return service.get();
     }
 
     @Override
-    public ServiceEntity findByNameContainning(String name) {
-        return serviceRepository.findByNameContaining(name).get();
+    public List<ServiceEntity> findByNameContainning(String name) {
+        return serviceRepository.findAllByNameContaining(name);
     }
 
     @Override
     public ServiceEntity findById(String id) {
-        return serviceRepository.findById(id).get();
+        Optional<ServiceEntity> service = serviceRepository.findById(id);
+        if (service.isEmpty()){
+            return  null;
+        }
+        return service.get();
     }
 
 

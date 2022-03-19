@@ -50,6 +50,9 @@ public class BookingServiceResources {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    BookingServiceMapping bookingServiceMapping;
+
 //   Admin + USER
     @PostMapping("")
     @ResponseBody
@@ -66,7 +69,7 @@ public class BookingServiceResources {
                 throw new MethodArgumentNotValidException(errors);
             }
 
-            BookingServiceEntity newBooking = BookingServiceMapping.ModelToEntity(bookingInfo);
+            BookingServiceEntity newBooking = bookingServiceMapping.ModelToEntity(bookingInfo);
 
             if (newBooking.getUserBookService() == null){
                 LOGGER.info("Username not exist: " + bookingInfo.getUserBookService());
@@ -74,12 +77,12 @@ public class BookingServiceResources {
             }
 
             if (newBooking.getService() == null){
-                LOGGER.info("Service not exist: " + bookingInfo.getServiceName());
+                LOGGER.info("Service not exist: " + bookingInfo.getServiceId());
                 throw new Exception("service is not exist");
             }
 
             if (!bookingService.isAvailableService(newBooking)){
-                LOGGER.info("Slot of service if full: " + bookingInfo.getServiceName());
+                LOGGER.info("Slot of service if full: " + bookingInfo.getServiceId());
                 throw new Exception("service not available");
             }
 
@@ -121,10 +124,6 @@ public class BookingServiceResources {
                 throw new Exception("Not found booking");
             }
 
-            if (!bookingService.isAvailableService(updateBooking)){
-                LOGGER.info("Slot of service if full: " + bookingInfo.getServiceName());
-                throw new Exception("service not available");
-            }
 
             updateBooking = bookingService.updateBookingServiceInfo(updateBooking, bookingInfo);
 
@@ -256,23 +255,29 @@ public class BookingServiceResources {
     @GetMapping("/find/date")
     @ResponseBody
     public ResponseEntity<SuccessResponse> getAllBookingServiceBydate(@RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "3") int size, @RequestParam String date) {
+                                                                        @RequestParam(defaultValue = "3") int size, @RequestParam String date) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
-        List<BookingServiceEntity> bookingServices = bookingService.getAllByDateBooking(dateTime, pageable);
+            List<BookingServiceEntity> bookingServices = bookingService.getAllByDateBooking(dateTime, pageable);
 
-        if(bookingServices == null) {
-            throw new RecordNotFoundException("No booking service existing " );
+            if(bookingServices == null) {
+                throw new RecordNotFoundException("No booking service existing " );
+            }
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("list booking services");
+            response.setSuccess(true);
+            response.getData().put("booking services",bookingServices);
+            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
         }
-        SuccessResponse response = new SuccessResponse();
-        response.setStatus(HttpStatus.OK.value());
-        response.setMessage("list booking services");
-        response.setSuccess(true);
-        response.getData().put("booking services",bookingServices);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        catch (Exception e) {
+            throw new Exception("Datetime is wrong format");
+        }
+
 
     }
 

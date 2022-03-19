@@ -59,9 +59,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT,"/api/account/**").hasAnyAuthority(UserPermission.USER_WRITE.getPermission(), UserPermission.ADMIN_WRITE.getPermission())
                 .antMatchers(HttpMethod.DELETE,"/api/account/**").hasAnyAuthority(UserPermission.USER_WRITE.getPermission(), UserPermission.ADMIN_WRITE.getPermission())
 
-                .antMatchers(HttpMethod.PUT,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
-                .antMatchers(HttpMethod.POST,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
-                .antMatchers(HttpMethod.DELETE,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+//                .antMatchers(HttpMethod.PUT,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+//                .antMatchers(HttpMethod.POST,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
+//                .antMatchers(HttpMethod.DELETE,"/api/service/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
 
                 .antMatchers(HttpMethod.PUT,"/api/pet/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
                 .antMatchers(HttpMethod.POST,"/api/pet/**").hasAnyAuthority(UserPermission.ADMIN_WRITE.getPermission())
