@@ -147,6 +147,7 @@ public class AuthentiactionController {
         Cookie cookieAccessToken = new Cookie("accessToken", accessToken);
         Cookie cookieRefreshToken = new Cookie("refreshToken", refreshToken);
 
+        resp.setHeader("Set-Cookie", "test=value; Path=/");
         resp.addCookie(cookieAccessToken);
         resp.addCookie(cookieRefreshToken);
 
@@ -160,7 +161,7 @@ public class AuthentiactionController {
         return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
     }
     @PostMapping("/refreshtoken")
-    public ResponseEntity<SuccessResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken, HttpServletRequest request) {
+    public ResponseEntity<SuccessResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken, HttpServletRequest request, HttpServletResponse resp) {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String accessToken = authorizationHeader.substring("Bearer ".length());
@@ -190,6 +191,11 @@ public class AuthentiactionController {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Login successful");
             response.setSuccess(true);
+
+            Cookie cookieAccessToken = new Cookie("accessToken", accessToken);
+
+            resp.setHeader("Set-Cookie", "test=value; Path=/");
+            resp.addCookie(cookieAccessToken);
 
             response.getData().put("accessToken",accessToken);
             response.getData().put("refreshToken",refreshToken);
