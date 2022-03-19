@@ -132,6 +132,7 @@ public class BookingServiceResources {
             response.setMessage("Update booking service is successful");
             response.setSuccess(true);
             response.getData().put("booking", updateBooking);
+          
             return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
         } else {
             throw new BadCredentialsException("access token is missing");
@@ -193,7 +194,6 @@ public class BookingServiceResources {
         if(bookingServices == null) {
             throw new RecordNotFoundException("No booking service existing " );
         }
-
         SuccessResponse response = new SuccessResponse();
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
@@ -214,7 +214,6 @@ public class BookingServiceResources {
         if(bookingServices == null) {
             throw new RecordNotFoundException("No booking service existing " );
         }
-
         SuccessResponse response = new SuccessResponse();
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
@@ -242,7 +241,6 @@ public class BookingServiceResources {
             if(bookingServices == null) {
                 throw new RecordNotFoundException("No booking service existing " );
             }
-
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("list booking services");

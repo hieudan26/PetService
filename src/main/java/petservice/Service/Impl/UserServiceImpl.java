@@ -27,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserEntity> getAllUser(Pageable pageable) {
+        if (userRepository.findAllByIdNotNull(pageable).isEmpty()){
+            return null;
+        }
         return userRepository.findAllByIdNotNull(pageable);
     }
 
@@ -98,7 +101,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> user = userRepository.findByUserName(username);
         if(user.isEmpty())
             return null;
-         return user.get();
+        return user.get();
     }
 
     @Override
