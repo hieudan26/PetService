@@ -15,7 +15,7 @@ public class ServiceEntity {
     private String description;
     private BigInteger price;
     private BigInteger slot;
-    private boolean status;
+    private Boolean status;
 
     @Id
     @GeneratedValue(generator = "uuid")

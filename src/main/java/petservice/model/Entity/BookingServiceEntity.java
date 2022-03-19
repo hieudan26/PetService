@@ -11,7 +11,6 @@ import java.util.Date;
 @Entity
 @Table(name = "\"BookingService\"", schema = "public")
 public class BookingServiceEntity {
-    @JsonIgnore
     private String id;
     private LocalDateTime dateBooking;
     private boolean payment;
