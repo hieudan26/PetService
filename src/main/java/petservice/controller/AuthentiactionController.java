@@ -145,7 +145,15 @@ public class AuthentiactionController {
         response.setSuccess(true);
 
         Cookie cookieAccessToken = new Cookie("accessToken", accessToken);
+        cookieAccessToken.setMaxAge(0);
+        cookieAccessToken.setSecure(true);
+        cookieAccessToken.setHttpOnly(true);
+        cookieAccessToken.setPath("/");
         Cookie cookieRefreshToken = new Cookie("refreshToken", refreshToken);
+        cookieRefreshToken.setMaxAge(0);
+        cookieRefreshToken.setSecure(true);
+        cookieRefreshToken.setHttpOnly(true);
+        cookieRefreshToken.setPath("/");
 
         resp.addCookie(cookieAccessToken);
         resp.addCookie(cookieRefreshToken);
