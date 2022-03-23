@@ -1,6 +1,7 @@
 package petservice.model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "\"Pet\"", schema = "\"public\"")
 public class PetEntity {
-    @JsonIgnore
+
     private String id;
     private String name;
     private String gender;
@@ -23,8 +24,9 @@ public class PetEntity {
     private boolean status;
     private BigInteger price;
     private List<ImagePetEntity> imagePetEntityList;
-    private List<BillEntity> billEntityList;
+    private BillEntity billEntity;
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public List<ImagePetEntity> getImagePetEntityList() {
         return imagePetEntityList;
     }
@@ -34,13 +36,14 @@ public class PetEntity {
     }
 
 
-    @OneToMany(mappedBy = "petSale", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
-    public List<BillEntity> getBillEntityList() {
-        return billEntityList;
+    @OneToOne(mappedBy = "petSale",fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public BillEntity getBillEntity() {
+        return billEntity;
     }
 
-    public void setBillEntityList(List<BillEntity> billEntityList) {
-        this.billEntityList = billEntityList;
+    public void setBillEntity(BillEntity billEntity) {
+        this.billEntity = billEntity;
     }
 
     @Id
