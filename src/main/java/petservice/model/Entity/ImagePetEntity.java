@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "\"ImagePet\"", schema = "\"public\"")
 public class ImagePetEntity {
+
     @JsonIgnore
     private String id;
     private String url;
@@ -17,8 +18,8 @@ public class ImagePetEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"IdPet\"")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JoinColumn(name = "\"IdPet\"")
     public PetEntity getPet() {
         return pet;
     }

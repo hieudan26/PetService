@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/pet")
+@RequestMapping("api/auth/pet")
 @RequiredArgsConstructor
 public class PetResources {
     private static final Logger LOGGER = LogManager.getLogger(PetResources.class);
