@@ -52,7 +52,7 @@ public class ServiceResource {
         Pageable pageable = PageRequest.of(page, size, Sort.by("Name"));
 
         List<ServiceEntity> serviceList = serviceService.getAllService(pageable);
-        if(serviceList == null) {
+        if(serviceList.isEmpty()) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
         SuccessResponse response = new SuccessResponse();
