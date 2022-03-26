@@ -132,7 +132,7 @@ public class BookingServiceResources {
             response.setMessage("Update booking service is successful");
             response.setSuccess(true);
             response.getData().put("booking", updateBooking);
-
+          
             return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
         } else {
             throw new BadCredentialsException("access token is missing");

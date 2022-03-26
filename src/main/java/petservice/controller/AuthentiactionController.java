@@ -34,7 +34,9 @@ import petservice.model.payload.response.SuccessResponse;
 import petservice.security.DTO.AppUserDetail;
 import petservice.security.JWT.JwtUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -103,7 +105,7 @@ public class AuthentiactionController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<SuccessResponse>  Sigin(@RequestBody @Valid LoginRequest user, BindingResult errors) throws Exception {
+    public ResponseEntity<SuccessResponse>  Sigin(@RequestBody @Valid LoginRequest user, BindingResult errors, HttpServletResponse resp) throws Exception {
 
         if (errors.hasErrors()) {
             throw new MethodArgumentNotValidException(errors);
@@ -142,8 +144,16 @@ public class AuthentiactionController {
         response.setMessage("Login successful");
         response.setSuccess(true);
 
+        Cookie cookieAccessToken = new Cookie("accessToken", accessToken);
+        Cookie cookieRefreshToken = new Cookie("refreshToken", refreshToken);
+
+        resp.setHeader("Set-Cookie", "test=value; Path=/");
+        resp.addCookie(cookieAccessToken);
+        resp.addCookie(cookieRefreshToken);
+
         response.getData().put("accessToken",accessToken);
         response.getData().put("refreshToken",refreshToken);
+
 //        response.getData().put("name",loginUser.getTenhienthi());
 //        response.getData().put("image",loginUser.getImage());
 //        response.getData().put("roles",userDetails.getRoles());
@@ -151,7 +161,7 @@ public class AuthentiactionController {
         return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
     }
     @PostMapping("/refreshtoken")
-    public ResponseEntity<SuccessResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken, HttpServletRequest request) {
+    public ResponseEntity<SuccessResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken, HttpServletRequest request, HttpServletResponse resp) {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String accessToken = authorizationHeader.substring("Bearer ".length());
@@ -174,6 +184,54 @@ public class AuthentiactionController {
 
 
             AppUserDetail userDetails =  AppUserDetail.build(userService.findByUsername(jwtUtils.getUserNameFromJwtToken(refreshToken.getRefreshToken())));
+
+            accessToken = jwtUtils.generateJwtToken(userDetails);
+
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Login successful");
+            response.setSuccess(true);
+
+            Cookie cookieAccessToken = new Cookie("accessToken", accessToken);
+
+            resp.setHeader("Set-Cookie", "test=value; Path=/");
+            resp.addCookie(cookieAccessToken);
+
+            response.getData().put("accessToken",accessToken);
+            response.getData().put("refreshToken",refreshToken);
+
+            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        }
+        else
+        {
+            throw new BadCredentialsException("access token is missing");
+        }
+    }
+
+    @PostMapping("/refreshtokencookie")
+    public ResponseEntity<SuccessResponse> refreshTokenCookie(@CookieValue("refreshToken") String refreshToken, HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            if(jwtUtils.validateExpiredToken(accessToken) == false){
+                throw new BadCredentialsException("access token is not expired");
+            }
+
+            if(jwtUtils.validateExpiredToken(refreshToken) == true){
+                throw new BadCredentialsException("refresh token is expired");
+            }
+
+            if(refreshToken == null){
+                throw new BadCredentialsException("refresh token is missing");
+            }
+
+            if(!jwtUtils.getUserNameFromJwtToken(refreshToken).equals(jwtUtils.getUserNameFromJwtToken(refreshToken))){
+                throw new BadCredentialsException("two token are not a pair");
+            }
+
+
+            AppUserDetail userDetails =  AppUserDetail.build(userService.findByUsername(jwtUtils.getUserNameFromJwtToken(refreshToken)));
 
             accessToken = jwtUtils.generateJwtToken(userDetails);
 
