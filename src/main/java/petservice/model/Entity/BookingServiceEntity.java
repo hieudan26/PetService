@@ -1,16 +1,13 @@
 package petservice.model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import static org.hibernate.type.descriptor.java.JdbcDateTypeDescriptor.DATE_FORMAT;
 
 @RestResource(exported=false)
 @Entity
@@ -18,7 +15,7 @@ import static org.hibernate.type.descriptor.java.JdbcDateTypeDescriptor.DATE_FOR
 public class BookingServiceEntity {
     private String id;
     @ApiModelProperty(required = true, dataType="date")
-    @JsonFormat(pattern = DATE_FORMAT)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime dateBooking;
     private boolean payment;
     private String status;
