@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name ="\"Bill\"", schema ="\"public\"")
 public class BillEntity {
-    @JsonIgnore
+
     private String id;
     private String methodPayment;
     private BigInteger price;
@@ -30,9 +30,8 @@ public class BillEntity {
         this.userBuyPet = userBuyPet;
     }
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "\"IdPet\"")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public PetEntity getPetSale() {
         return petSale;
     }
@@ -77,7 +76,6 @@ public class BillEntity {
     public LocalDateTime getPaymentDate() {
         return paymentDate;
     }
-
     public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
