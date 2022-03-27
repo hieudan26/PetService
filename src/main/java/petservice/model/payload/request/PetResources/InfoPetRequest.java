@@ -21,6 +21,7 @@ public class InfoPetRequest {
     private String name;
     private String gender;
     private String location;
+    private String breed;
     private BigInteger age;
     private BigInteger size;
     private String description;
