@@ -43,27 +43,27 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillEntity> getAllByUser(UserEntity user, Pageable pageable) throws Exception {
+    public List<BillEntity> getAllByUser(UserEntity user, Pageable pageable) {
         if (billRepository.findAllByUserBuyPet(user, pageable).isEmpty()) {
-            throw new Exception("Bill is empty");
+            return null;
         } else {
             return billRepository.findAllByUserBuyPet(user, pageable);
         }
     }
 
     @Override
-    public BillEntity getByPet(PetEntity pet) throws Exception {
+    public BillEntity getByPet(PetEntity pet) {
         if (billRepository.findByPetSale(pet).isEmpty()) {
-            throw new Exception("Not Existing");
+            return null;
         } else {
             return billRepository.findByPetSale(pet).get();
         }
     }
 
     @Override
-    public List<BillEntity> getAllByPaymentDate(LocalDateTime time, Pageable pageable) throws Exception {
+    public List<BillEntity> getAllByPaymentDate(LocalDateTime time, Pageable pageable) {
         if (billRepository.findAllByPaymentDate(time, pageable).isEmpty()) {
-            throw new Exception("Not Existing");
+            return null;
         } else {
             return billRepository.findAllByPaymentDate(time, pageable);
         }

@@ -29,7 +29,6 @@ public class UserMapping {
         user.setUpdate(LocalDateTime.now(ZoneId.of("GMT+07:00")));
         user.setFirstName(userInfo.getFirstName());
         user.setLastName(userInfo.getLastName());
-        user.setAvatar(userInfo.getAvatar());
         user.setPhone(userInfo.getPhone());
         if(user.getAddress() == null)
         {
