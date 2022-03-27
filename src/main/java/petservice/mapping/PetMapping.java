@@ -20,6 +20,7 @@ public class PetMapping {
         newPet.setGender(addPetRequest.getGender());
         newPet.setLocation(addPetRequest.getLocation());
         newPet.setDescription(addPetRequest.getDescription());
+        newPet.setBreed(addPetRequest.getBreed());
 
 
         if (addPetRequest.getAge().equals("")){
@@ -71,7 +72,12 @@ public class PetMapping {
 
     public static PetEntity UpdatePetInfoByPet(PetEntity pet, InfoPetRequest petInfo) {
         pet.setName(petInfo.getName());
+        pet.setGender(petInfo.getGender());
+        pet.setLocation(petInfo.getLocation());
+        pet.setBreed(petInfo.getBreed());
         pet.setDescription(petInfo.getDescription());
+
+
 
         if (petInfo.getAge().equals("")){
             pet.setAge(new BigInteger("0"));
