@@ -22,6 +22,8 @@ public class AddPetRequest {
     private String gender;
     @NotBlank (message = "Thiếu vị trí")
     private String location;
+    @NotBlank (message = "Thiếu giống")
+    private String breed;
     @NotNull (message = "Thiếu tuổi")
     private BigInteger age;
     @NotNull (message = "Thiếu size")

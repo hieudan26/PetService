@@ -17,6 +17,7 @@ public class PetEntity {
     private String name;
     private String gender;
     private String location;
+    private String breed;
     private BigInteger age;
     private BigInteger size;
     private String description;
@@ -82,6 +83,16 @@ public class PetEntity {
     @Column(name = "\"Location\"")
     public String getLocation() {
         return location;
+    }
+
+    @Basic
+    @Column(name = "\"Breed\"")
+    public String getBreed() {
+        return breed;
+    }
+
+    public void setBreed(String breed) {
+        this.breed = breed;
     }
 
     public void setLocation(String location) {
@@ -161,6 +172,7 @@ public class PetEntity {
         if (name != null ? !name.equals(petEntity.name) : petEntity.name != null) return false;
         if (gender != null ? !gender.equals(petEntity.gender) : petEntity.gender != null) return false;
         if (location != null ? !location.equals(petEntity.location) : petEntity.location != null) return false;
+        if (breed != null ? !breed.equals(petEntity.breed) : petEntity.breed != null) return false;
         if (age != null ? !age.equals(petEntity.age) : petEntity.age != null) return false;
         if (size != null ? !size.equals(petEntity.size) : petEntity.size != null) return false;
         if (description != null ? !description.equals(petEntity.description) : petEntity.description != null)
@@ -176,6 +188,7 @@ public class PetEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
         result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (breed != null ? breed.hashCode() : 0);
         result = 31 * result + (age != null ? age.hashCode() : 0);
         result = 31 * result + (size != null ? size.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
