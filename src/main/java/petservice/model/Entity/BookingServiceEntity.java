@@ -1,17 +1,21 @@
 package petservice.model.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
+
+
 @RestResource(exported=false)
 @Entity
 @Table(name = "\"BookingService\"", schema = "public")
 public class BookingServiceEntity {
     private String id;
+    @ApiModelProperty(required = true, dataType="date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime dateBooking;
     private boolean payment;
     private String status;
