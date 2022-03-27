@@ -31,5 +31,6 @@ public interface UserService {
     void deleteUserById(String id);
     void deleteUsersById(String[] ids);
     UserEntity updateActive(UserEntity user);
+    UserEntity updateAvatar(UserEntity user,String url);
     UserEntity setStatus(UserEntity user,Boolean status);
 }

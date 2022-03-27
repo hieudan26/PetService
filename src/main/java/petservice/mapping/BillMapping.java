@@ -42,19 +42,18 @@ public class BillMapping {
             newBill.setPetSale(pet);
         }
 
-        if (addBillRequest.getPrice().equals("")) {
+        if (addBillRequest.getPrice().trim().equals("")) {
             newBill.setPrice(new BigInteger("0"));
         } else {
-            newBill.setPrice(addBillRequest.getPrice());
+            newBill.setPrice(new BigInteger(addBillRequest.getPrice()));
         }
 
         newBill.setMethodPayment(addBillRequest.getMethodPayment());
 
         try{
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//            LocalDateTime dateTime = LocalDateTime.parse(addBillRequest.getPaymentDate(), formatter);
-
-            newBill.setPaymentDate(addBillRequest.getPaymentDate());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateTime = LocalDateTime.parse(addBillRequest.getPaymentDate(), formatter);
+            newBill.setPaymentDate(dateTime);
         }catch (Exception e) {
             throw new Exception("Incorrect date format");
         }
@@ -77,19 +76,18 @@ public class BillMapping {
             bill.setPetSale(pet);
         }
 
-        if (infoBillRequest.getPrice().equals("")) {
+        if (infoBillRequest.getPrice().trim().equals("")) {
             bill.setPrice(new BigInteger("0"));
         } else {
-            bill.setPrice(infoBillRequest.getPrice());
+            bill.setPrice(new BigInteger(infoBillRequest.getPrice()));
         }
 
         bill.setMethodPayment(infoBillRequest.getMethodPayment());
 
         try{
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//            LocalDateTime dateTime = LocalDateTime.parse(infoBillRequest.getPaymentDate(), formatter);
-//            bill.setPaymentDate(dateTime);
-            bill.setPaymentDate(infoBillRequest.getPaymentDate());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateTime = LocalDateTime.parse(infoBillRequest.getPaymentDate(), formatter);
+            bill.setPaymentDate(dateTime);
         }catch (Exception e) {
             throw new Exception("Incorrect date format");
         }

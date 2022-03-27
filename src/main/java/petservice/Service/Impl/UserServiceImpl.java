@@ -163,4 +163,10 @@ public class UserServiceImpl implements UserService {
         user.setStatus(status);
         return userRepository.save(user);
     }
+
+    @Override
+    public UserEntity updateAvatar(UserEntity user, String url) {
+        user.setAvatar(url);
+        return userRepository.save(user);
+    }
 }
