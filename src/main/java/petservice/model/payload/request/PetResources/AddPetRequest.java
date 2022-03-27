@@ -4,6 +4,9 @@ import lombok.*;
 import petservice.model.Entity.ImagePetEntity;
 import petservice.model.payload.request.ImagePetResources.AddImagePetRequest;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -13,14 +16,20 @@ import java.util.List;
 @Getter
 @Setter
 public class AddPetRequest {
+    @NotBlank(message = "Thiếu tên")
     private String name;
+    @NotBlank (message = "Thiếu giới tính")
     private String gender;
+    @NotBlank (message = "Thiếu vị trí")
     private String location;
-    private String age;
-    private String size;
+    @NotNull (message = "Thiếu tuổi")
+    private BigInteger age;
+    @NotNull (message = "Thiếu size")
+    private BigInteger size;
     private String description;
-    private String vaccinated;
-    private String status;
-    private String price;
+    private Boolean vaccinated;
+    private Boolean status;
+    @NotNull(message = "Thiếu giá")
+    private BigInteger price;
     private List<AddImagePetRequest> imagePetEntityList;
 }
