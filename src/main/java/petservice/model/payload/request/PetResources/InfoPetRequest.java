@@ -4,6 +4,9 @@ import lombok.*;
 import petservice.model.Entity.ImagePetEntity;
 import petservice.model.payload.request.ImagePetResources.AddImagePetRequest;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -18,11 +21,12 @@ public class InfoPetRequest {
     private String name;
     private String gender;
     private String location;
-    private String age;
-    private String size;
+    private String breed;
+    private BigInteger age;
+    private BigInteger size;
     private String description;
-    private String vaccinated;
-    private String status;
-    private String price;
+    private Boolean vaccinated;
+    private Boolean status;
+    private BigInteger price;
     private List<AddImagePetRequest> imagePetEntityList;
 }

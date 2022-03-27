@@ -11,7 +11,6 @@ public class InfoUserRequest {
     private String firstName;
     private String lastName;
     private String phone;
-    private String avatar;
     private AddressRequest address;
 
 }
