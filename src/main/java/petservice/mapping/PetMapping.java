@@ -20,41 +20,42 @@ public class PetMapping {
         newPet.setGender(addPetRequest.getGender());
         newPet.setLocation(addPetRequest.getLocation());
         newPet.setDescription(addPetRequest.getDescription());
+        newPet.setBreed(addPetRequest.getBreed());
 
 
-        if (addPetRequest.getAge().trim().equals("")){
+        if (addPetRequest.getAge().equals("")){
             newPet.setAge(new BigInteger("0"));
         }
         else{
-            newPet.setAge(new BigInteger(addPetRequest.getAge()));
+            newPet.setAge(addPetRequest.getAge());
         }
 
-        if (addPetRequest.getSize().trim().equals("")){
+        if (addPetRequest.getSize().equals("")){
             newPet.setSize(new BigInteger("0"));
         }
         else{
-            newPet.setSize(new BigInteger(addPetRequest.getSize()));
+            newPet.setSize(addPetRequest.getSize());
         }
 
-        if (addPetRequest.getPrice().trim().equals("")){
+        if (addPetRequest.getPrice().equals("")){
             newPet.setPrice(new BigInteger("0"));
         }
         else{
-            newPet.setPrice(new BigInteger(addPetRequest.getPrice()));
+            newPet.setPrice(addPetRequest.getPrice());
         }
 
         if (addPetRequest.getVaccinated().toString().trim().equals("")){
             newPet.setVaccinated(false);
         }
         else {
-            newPet.setVaccinated(Boolean.parseBoolean(addPetRequest.getVaccinated()));
+            newPet.setVaccinated(addPetRequest.getVaccinated());
         }
 
         if (addPetRequest.getStatus().toString().trim().equals("")){
             newPet.setStatus(true);
         }
         else {
-            newPet.setStatus(Boolean.parseBoolean(addPetRequest.getStatus()));
+            newPet.setStatus(addPetRequest.getStatus());
         }
         List<ImagePetEntity> ListImage = new ArrayList<ImagePetEntity>();
         for (AddImagePetRequest addImagePetRequest : addPetRequest.getImagePetEntityList()) {
@@ -71,41 +72,46 @@ public class PetMapping {
 
     public static PetEntity UpdatePetInfoByPet(PetEntity pet, InfoPetRequest petInfo) {
         pet.setName(petInfo.getName());
+        pet.setGender(petInfo.getGender());
+        pet.setLocation(petInfo.getLocation());
+        pet.setBreed(petInfo.getBreed());
         pet.setDescription(petInfo.getDescription());
 
-        if (petInfo.getAge().trim().equals("")){
+
+
+        if (petInfo.getAge().equals("")){
             pet.setAge(new BigInteger("0"));
         }
         else{
-            pet.setAge(new BigInteger(petInfo.getAge()));
+            pet.setAge(petInfo.getAge());
         }
 
-        if (petInfo.getSize().trim().equals("")){
+        if (petInfo.getSize().equals("")){
             pet.setSize(new BigInteger("0"));
         }
         else{
-            pet.setSize(new BigInteger(petInfo.getSize()));
+            pet.setSize(petInfo.getSize());
         }
 
-        if (petInfo.getPrice().trim().equals("")){
+        if (petInfo.getPrice().equals("")){
             pet.setPrice(new BigInteger("0"));
         }
         else{
-            pet.setPrice(new BigInteger(petInfo.getPrice()));
+            pet.setPrice(petInfo.getPrice());
         }
 
         if (petInfo.getVaccinated().toString().trim().equals("")){
             pet.setVaccinated(false);
         }
         else {
-            pet.setVaccinated(Boolean.parseBoolean(petInfo.getVaccinated()));
+            pet.setVaccinated(petInfo.getVaccinated());
         }
 
         if (petInfo.getStatus().toString().trim().equals("")){
             pet.setStatus(true);
         }
         else {
-            pet.setStatus(Boolean.parseBoolean(petInfo.getStatus()));
+            pet.setStatus(petInfo.getStatus());
         }
 
         List<ImagePetEntity> ListImage = new ArrayList<ImagePetEntity>();
