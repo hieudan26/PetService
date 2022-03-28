@@ -17,6 +17,7 @@ import petservice.Handler.HttpMessageNotReadableException;
 import petservice.Handler.MethodArgumentNotValidException;
 import petservice.Service.UserService;
 import petservice.model.Entity.UserEntity;
+import petservice.model.payload.request.UserResources.ChangeAvatarRequest;
 import petservice.model.payload.request.UserResources.ChangePassRequest;
 import petservice.model.payload.request.UserResources.InfoUserRequest;
 import petservice.model.payload.request.Authentication.LoginRequest;
@@ -103,7 +104,7 @@ public class AccountResources {
     }
     @PutMapping("/avatar")
     @ResponseBody
-    public ResponseEntity<SuccessResponse>  updateAvatar(@RequestBody @Valid String url, BindingResult errors, HttpServletRequest request) throws Exception {
+    public ResponseEntity<SuccessResponse>  updateAvatar(@RequestBody @Valid ChangeAvatarRequest AvatarUrl, BindingResult errors, HttpServletRequest request) throws Exception {
 
         if (errors.hasErrors()) {
             throw new MethodArgumentNotValidException(errors);
@@ -118,7 +119,7 @@ public class AccountResources {
 
             UserEntity user = userService.findByUsername(jwtUtils.getUserNameFromJwtToken(accessToken));
 
-            user = userService.updateAvatar(user,url);
+            user = userService.updateAvatar(user,AvatarUrl.getUrl());
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("Update info successful");
