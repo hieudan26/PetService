@@ -2,6 +2,7 @@ package petservice.Service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import petservice.Service.PetService;
@@ -26,7 +27,7 @@ public class PetServiceImpl implements PetService {
     final ImagePetRepository imagePetRepository;
 
     @Override
-    public List<PetEntity> getAllPet(Pageable pageable) {
+    public Page<PetEntity> getAllPet(Pageable pageable) {
         return petRepository.findAllByIdNotNull(pageable);
     }
 

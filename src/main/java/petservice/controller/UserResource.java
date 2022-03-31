@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ import petservice.model.payload.request.UserResources.RoleToUserRequest;
 import petservice.model.payload.request.UserResources.StatusRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
+import petservice.model.payload.response.SuccessResponseWithPagination;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -48,20 +50,57 @@ public class UserResource {
 
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getUsers(  @RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "3") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("CreateAt"));
+    public ResponseEntity<SuccessResponseWithPagination> getUsers(
+            @RequestParam(required=false) String id,        @RequestParam(required=false) String firstname,
+            @RequestParam(required=false) String lastname,  @RequestParam(required=false) String email,
+            @RequestParam(required=false) String phone,     @RequestParam(required=false) String username,
+            @RequestParam(required=false) Boolean status,   @RequestParam(required=false) Boolean active,
+            @RequestParam(required=false) Boolean address,  @RequestParam(required=false) Boolean all,
 
-        List<UserEntity> userList = userService.getAllUser(pageable);
-        if(userList == null) {
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "3") int size,
+                                                                @RequestParam(defaultValue = "CreateAt") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+
+        Page<UserEntity> userPage = userService.getAllUser(pageable);
+        if(userPage == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+
+
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(userPage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list users");
         response.setSuccess(true);
-        response.getData().put("users",userList);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("users",userPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public ResponseEntity<SuccessResponseWithPagination> findUsers(
+            @RequestParam(required=false) String id,        @RequestParam(required=false) String firstname,
+            @RequestParam(required=false) String lastname,  @RequestParam(required=false) String email,
+            @RequestParam(required=false) String phone,     @RequestParam(required=false) String username,
+            @RequestParam(required=false) Boolean status,   @RequestParam(required=false) Boolean active,
+            @RequestParam(required=false) Boolean address,  @RequestParam(required=false) Boolean all,
+
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "3") int size,
+                                                            @RequestParam(defaultValue = "CreateAt") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Page<UserEntity> userPage = userService.getAllUser(pageable);
+        if(userPage == null) {
+            throw new RecordNotFoundException("No UserEntity existing " );
+        }
+
+
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(userPage);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("list users");
+        response.setSuccess(true);
+        response.getData().put("users",userPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
     @GetMapping("{id}")
@@ -126,9 +165,9 @@ public class UserResource {
             throw new MethodArgumentNotValidException(errors);
         }
         if (request == null) {
-            LOGGER.info("Inside addIssuer, adding: " + request.toString());
             throw new HttpMessageNotReadableException("Missing field");
         } else {
+            LOGGER.info("Inside addIssuer, adding: " + request);
             LOGGER.info("Inside addIssuer...");
         }
 
@@ -205,7 +244,7 @@ public class UserResource {
 
     @DeleteMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> deleteUser(@RequestBody @Valid DeletePetsRequest deleteRequest, BindingResult errors, HttpServletRequest request) throws Exception {
+    public ResponseEntity<SuccessResponse> deleteUser(@RequestBody @Valid DeletePetsRequest deleteRequest, BindingResult errors) throws Exception {
         if (errors.hasErrors()) {
             throw new MethodArgumentNotValidException(errors);
         }

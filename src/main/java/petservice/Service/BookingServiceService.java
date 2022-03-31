@@ -1,5 +1,6 @@
 package petservice.Service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import petservice.model.Entity.BookingServiceEntity;
@@ -13,14 +14,14 @@ import java.util.List;
 
 @Component
 public interface BookingServiceService {
-    List<BookingServiceEntity> getAllBookingService(Pageable pageable);
-    List<BookingServiceEntity>  getAllByService(ServiceEntity service, Pageable pageable);
-    List<BookingServiceEntity>  getAllByUserBookServiceName(String name, Pageable pageable);
-    List<BookingServiceEntity>  getAllByStatus(String status, Pageable pageable);
-    List<BookingServiceEntity>  getAllByPayment(boolean status, Pageable pageable);
-    List<BookingServiceEntity>  getAllByDateBooking(LocalDateTime time, Pageable pageable);
-    List<BookingServiceEntity> getAllByUserBookServiceAndServiceAndDateBooking(UserEntity user, ServiceEntity service, LocalDateTime time, Pageable pageable);
-    List<BookingServiceEntity> getALLByService_NameContaining(String Name, Pageable pageable);
+    Page<BookingServiceEntity> getAllBookingService(Pageable pageable);
+    Page<BookingServiceEntity>  getAllByService(ServiceEntity service, Pageable pageable);
+    Page<BookingServiceEntity>  getAllByUserBookServiceName(String name, Pageable pageable);
+    Page<BookingServiceEntity>  getAllByStatus(String status, Pageable pageable);
+    Page<BookingServiceEntity>  getAllByPayment(boolean status, Pageable pageable);
+    Page<BookingServiceEntity>  getAllByDateBooking(LocalDateTime time, Pageable pageable);
+    Page<BookingServiceEntity> getAllByUserBookServiceAndServiceAndDateBooking(UserEntity user, ServiceEntity service, LocalDateTime time, Pageable pageable);
+    Page<BookingServiceEntity> getALLByService_NameContaining(String Name, Pageable pageable);
 
     BookingServiceEntity saveBookingService (BookingServiceEntity bookingService);
     BookingServiceEntity updateBookingServiceInfo(BookingServiceEntity bookingService, InfoBookingServiceRequest bookingServiceInfo) throws Exception;
