@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 @Table(name = "\"BookingService\"", schema = "public")
 public class BookingServiceEntity {
     private String id;
-    @ApiModelProperty(required = true, dataType="date")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime dateBooking;
     private boolean payment;
     private String status;
