@@ -1,5 +1,6 @@
 package petservice.Service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import petservice.model.Entity.ServiceEntity;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Component
 public interface ServiceService {
-    List<ServiceEntity> getAllService(Pageable pageable);
+    Page<ServiceEntity> getAllService(Pageable pageable);
     ServiceEntity saveService(ServiceEntity service);
     ServiceEntity updateServiceInfo(ServiceEntity service, InfoServiceRequest serviceInfo);
     ServiceEntity getService(String name);

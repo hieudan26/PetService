@@ -1,5 +1,6 @@
 package petservice.Service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import petservice.model.Entity.PetEntity;
 import petservice.model.payload.request.PetResources.InfoPetRequest;
@@ -7,7 +8,7 @@ import petservice.model.payload.request.PetResources.InfoPetRequest;
 import java.util.List;
 
 public interface PetService {
-    List<PetEntity> getAllPet(Pageable pageable);
+    Page<PetEntity> getAllPet(Pageable pageable);
     PetEntity savePet(PetEntity pet);
     PetEntity updatePetInfo(PetEntity service, InfoPetRequest petInfo);
     PetEntity getPet(String id);

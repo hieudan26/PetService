@@ -3,6 +3,7 @@ package petservice.Service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import petservice.Service.UserService;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     final RoleRepository roleRepository;
 
     @Override
-    public List<UserEntity> getAllUser(Pageable pageable) {
+    public Page<UserEntity> getAllUser(Pageable pageable) {
         if (userRepository.findAllByIdNotNull(pageable).isEmpty()){
             return null;
         }

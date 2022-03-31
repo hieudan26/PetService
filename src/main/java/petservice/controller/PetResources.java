@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import petservice.model.payload.request.PetResources.DeletePetsRequest;
 import petservice.model.payload.request.PetResources.InfoPetRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
+import petservice.model.payload.response.SuccessResponseWithPagination;
 import petservice.security.JWT.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,20 +50,20 @@ public class PetResources {
 
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getPets(@RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<SuccessResponseWithPagination> getPets(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("Name"));
 
-        List<PetEntity> petEntityList = petService.getAllPet(pageable);
-        if (petEntityList == null) {
+        Page<PetEntity> petEntityPage = petService.getAllPet(pageable);
+        if (petEntityPage == null) {
             throw new RecordNotFoundException("No PetEntity existing ");
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(petEntityPage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("List pets");
         response.setSuccess(true);
-        response.getData().put("pets", petEntityList);
-        return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
+        response.getData().put("pets", petEntityPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response, HttpStatus.OK);
     }
 
 

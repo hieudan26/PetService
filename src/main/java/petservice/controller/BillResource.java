@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,7 @@ import petservice.model.payload.request.BillResources.AddBillRequest;
 import petservice.model.payload.request.BillResources.DeleteBillByIdPetRequest;
 import petservice.model.payload.request.BillResources.DeleteBillsRequest;
 import petservice.model.payload.response.SuccessResponse;
+import petservice.model.payload.response.SuccessResponseWithPagination;
 import petservice.security.JWT.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,20 +57,20 @@ public class BillResource {
 
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getBills(@RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<SuccessResponseWithPagination> getBills(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("PaymentDate"));
 
-        List<BillEntity> billEntityList = billService.getAllBills(pageable);
-        if (billEntityList == null) {
+        Page<BillEntity> billEntityPage = billService.getAllBills(pageable);
+        if (billEntityPage == null) {
             throw new RecordNotFoundException("No Bill Entity existing ");
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(billEntityPage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("List bills");
         response.setSuccess(true);
-        response.getData().put("bills", billEntityList);
-        return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
+        response.getData().put("bills", billEntityPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response, HttpStatus.OK);
     }
 
 
@@ -96,7 +98,7 @@ public class BillResource {
 
     @GetMapping("/find/user")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBillsByUsername(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<SuccessResponseWithPagination> getAllBillsByUsername(@RequestParam(defaultValue = "0") int page,
                                                                           @RequestParam(defaultValue = "3") int size, @RequestParam String name) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by("PaymentDate"));
 
@@ -104,17 +106,17 @@ public class BillResource {
         if (user == null) {
             throw new Exception("User not exist");
         }
-        List<BillEntity> billEntityList = billService.getAllByUser(user, pageable);
+        Page<BillEntity> billEntityPage = billService.getAllByUser(user, pageable);
 
-        if(billEntityList == null) {
+        if(billEntityPage == null) {
             throw new RecordNotFoundException("No bill existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(billEntityPage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list bills");
         response.setSuccess(true);
-        response.getData().put("bills",billEntityList);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("bills",billEntityPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
     @GetMapping("/find/pet")

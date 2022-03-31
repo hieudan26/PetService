@@ -1,5 +1,6 @@
 package petservice.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @EnableJpaRepositories
 public interface ImagePetRepository extends JpaRepository<ImagePetEntity, String> {
-    List<PetEntity> findAllByIdNotNull(Pageable pageable);
+    Page<PetEntity> findAllByIdNotNull(Pageable pageable);
     Optional<ImagePetEntity> findById(String id);
     List<ImagePetEntity> findByPet(PetEntity pet);
     void deleteByPet(PetEntity pet);

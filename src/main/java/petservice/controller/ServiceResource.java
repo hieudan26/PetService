@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,6 +24,7 @@ import petservice.model.payload.request.ServiceResources.DeleteServiceRequest;
 import petservice.model.payload.request.ServiceResources.InfoServiceRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
+import petservice.model.payload.response.SuccessResponseWithPagination;
 import petservice.security.JWT.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,20 +49,20 @@ public class ServiceResource {
 
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getServices(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "3") int size) {
+    public ResponseEntity<SuccessResponseWithPagination> getServices(@RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("Name"));
 
-        List<ServiceEntity> serviceList = serviceService.getAllService(pageable);
-        if(serviceList.isEmpty()) {
+        Page<ServiceEntity> servicePage = serviceService.getAllService(pageable);
+        if(servicePage.isEmpty()) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(servicePage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list services");
         response.setSuccess(true);
-        response.getData().put("services",serviceList   );
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("services",servicePage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
 

@@ -15,7 +15,6 @@ public class SuccessResponse {
     private int status;
     private String message;
     private Map<String,Object> data;
-
     public SuccessResponse(){
         this.data = new HashMap<>();
     }
