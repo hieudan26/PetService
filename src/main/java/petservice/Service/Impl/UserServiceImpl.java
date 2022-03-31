@@ -22,6 +22,10 @@ import java.util.Set;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImpl implements UserService {
+    @Override
+    public Page<UserEntity> Search(Pageable pageable) {
+        return null;
+    }
 
     final UserRepository userRepository;
     final RoleRepository roleRepository;
