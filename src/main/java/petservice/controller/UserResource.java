@@ -51,18 +51,35 @@ public class UserResource {
     @GetMapping("")
     @ResponseBody
     public ResponseEntity<SuccessResponseWithPagination> getUsers(
-            @RequestParam(required=false) String id,        @RequestParam(required=false) String firstname,
+            @RequestParam(required=false) String all,       @RequestParam(required=false) String firstname,
             @RequestParam(required=false) String lastname,  @RequestParam(required=false) String email,
             @RequestParam(required=false) String phone,     @RequestParam(required=false) String username,
             @RequestParam(required=false) Boolean status,   @RequestParam(required=false) Boolean active,
-            @RequestParam(required=false) Boolean address,  @RequestParam(required=false) Boolean all,
 
                                                                 @RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "3") int size,
                                                                 @RequestParam(defaultValue = "CreateAt") String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Map<String,String> ParamMap = new HashMap<>();
 
-        Page<UserEntity> userPage = userService.getAllUser(pageable);
+        if(firstname != null)
+            ParamMap.put("firstName",firstname);
+        if(lastname != null)
+            ParamMap.put("lastname",lastname);
+        if(email != null)
+            ParamMap.put("email",email);
+        if(phone != null)
+            ParamMap.put("phone",phone);
+        if(username != null)
+            ParamMap.put("username",username);
+        if(status != null)
+            ParamMap.put("status",status.toString());
+        if(active != null)
+            ParamMap.put("active",active.toString());
+        if(all != null)
+            ParamMap.put("all",all);
+
+        Page<UserEntity> userPage = userService.getAllUser(ParamMap,pageable);
         if(userPage == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
@@ -76,32 +93,6 @@ public class UserResource {
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    @ResponseBody
-    public ResponseEntity<SuccessResponseWithPagination> findUsers(
-            @RequestParam(required=false) String id,        @RequestParam(required=false) String firstname,
-            @RequestParam(required=false) String lastname,  @RequestParam(required=false) String email,
-            @RequestParam(required=false) String phone,     @RequestParam(required=false) String username,
-            @RequestParam(required=false) Boolean status,   @RequestParam(required=false) Boolean active,
-            @RequestParam(required=false) Boolean address,  @RequestParam(required=false) Boolean all,
-
-                                                            @RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "3") int size,
-                                                            @RequestParam(defaultValue = "CreateAt") String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<UserEntity> userPage = userService.getAllUser(pageable);
-        if(userPage == null) {
-            throw new RecordNotFoundException("No UserEntity existing " );
-        }
-
-
-        SuccessResponseWithPagination response = new SuccessResponseWithPagination(userPage);
-        response.setStatus(HttpStatus.OK.value());
-        response.setMessage("list users");
-        response.setSuccess(true);
-        response.getData().put("users",userPage.getContent());
-        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
-    }
 
     @GetMapping("{id}")
     @ResponseBody
