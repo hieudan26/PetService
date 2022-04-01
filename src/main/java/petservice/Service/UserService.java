@@ -11,11 +11,12 @@ import petservice.model.payload.request.UserResources.InfoUserRequest;
 
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Service
 public interface UserService {
-    Page<UserEntity> getAllUser(Pageable pageable);
+    Page<UserEntity> getAllUser(Map<String,String> ParamMap, Pageable pageable);
     UserEntity saveUser(UserEntity user, String roleName);
     RoleEntity saveRole(RoleEntity role);
     void addRoleToUser(String email, String roleName);
