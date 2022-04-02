@@ -8,11 +8,11 @@ import petservice.model.payload.request.PetResources.InfoPetRequest;
 import java.util.List;
 
 public interface PetService {
-    Page<PetEntity> getAllPet(Pageable pageable) throws Exception;
-    Page<PetEntity> getAllByCategor(Pageable pageable, String category) throws Exception;
+    Page<PetEntity> getAllPet(Pageable pageable);
+    Page<PetEntity> getAllByCategor(Pageable pageable, String category);
     PetEntity savePet(PetEntity pet);
     PetEntity updatePetInfo(PetEntity service, InfoPetRequest petInfo);
-    PetEntity getPet(String id) throws Exception;
+    PetEntity getPet(String id);
     List<PetEntity> getPets();
     PetEntity findById(String id);
     PetEntity setStatus(PetEntity pet,Boolean status);

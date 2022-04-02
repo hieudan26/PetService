@@ -27,7 +27,7 @@ public class PetServiceImpl implements PetService {
     final ImagePetRepository imagePetRepository;
 
     @Override
-    public Page<PetEntity> getAllPet(Pageable pageable) throws Exception {
+    public Page<PetEntity> getAllPet(Pageable pageable) {
         if (petRepository.findAllByIdNotNull(pageable).isEmpty()) {
             return null;
         }
@@ -35,7 +35,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Page<PetEntity> getAllByCategor(Pageable pageable, String category) throws Exception {
+    public Page<PetEntity> getAllByCategor(Pageable pageable, String category) {
         if (petRepository.findAllByCategory(pageable,category).isEmpty()) {
             return null;
         }
@@ -54,7 +54,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public PetEntity getPet(String id) throws Exception {
+    public PetEntity getPet(String id) {
 
         log.info("Fetching pet {}", id);
         if (petRepository.findById(id).isEmpty()){
