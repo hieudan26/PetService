@@ -18,15 +18,25 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class InfoPetRequest {
+    @NotBlank(message = "Thiếu tên")
     private String name;
+    @NotBlank (message = "Thiếu giới tính")
     private String gender;
+    @NotBlank (message = "Thiếu vị trí")
     private String location;
+    @NotBlank (message = "Thiếu giống")
     private String breed;
+    @NotNull (message = "Thiếu tuổi")
     private BigInteger age;
+    @NotNull (message = "Thiếu size")
     private BigInteger size;
     private String description;
+    @NotNull(message = "Thiếu vacxin")
     private Boolean vaccinated;
     private Boolean status;
+    @NotNull(message = "Thiếu giá")
     private BigInteger price;
+    @NotBlank(message = "Thiếu loại")
+    private String category;
     private List<AddImagePetRequest> imagePetEntityList;
 }

@@ -28,7 +28,18 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public Page<PetEntity> getAllPet(Pageable pageable) {
+        if (petRepository.findAllByIdNotNull(pageable).isEmpty()) {
+            return null;
+        }
         return petRepository.findAllByIdNotNull(pageable);
+    }
+
+    @Override
+    public Page<PetEntity> getAllByCategor(Pageable pageable, String category) {
+        if (petRepository.findAllByCategory(pageable,category).isEmpty()) {
+            return null;
+        }
+        return petRepository.findAllByCategory(pageable,category);
     }
 
     @Override
@@ -44,7 +55,11 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public PetEntity getPet(String id) {
+
         log.info("Fetching pet {}", id);
+        if (petRepository.findById(id).isEmpty()){
+            return null;
+        }
         return petRepository.findById(id).get();
     }
 

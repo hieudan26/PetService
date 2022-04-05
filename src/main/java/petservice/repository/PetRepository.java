@@ -13,6 +13,7 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface PetRepository extends JpaRepository<PetEntity, String> {
     Page<PetEntity> findAllByIdNotNull(Pageable pageable);
+    Page<PetEntity> findAllByCategory(Pageable pageable, String category);
     Optional<PetEntity> findById(String id);
     void deleteById(String id);
 }
