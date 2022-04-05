@@ -87,6 +87,25 @@ public class PetResources {
         return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
 
     }
+    @GetMapping("/category/{category}")
+    @ResponseBody
+    public ResponseEntity<SuccessResponseWithPagination> getPetsByCategory(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             HttpServletRequest request, @PathVariable("category") String category) throws Exception {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("Name"));
+        Page<PetEntity> petEntityPage = petService.getAllByCategor(pageable, category);
+        if (petEntityPage == null) {
+            throw new RecordNotFoundException("No PetEntity existing ");
+        }
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(petEntityPage);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage("List pets");
+        response.setSuccess(true);
+        response.getData().put("pets", petEntityPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response, HttpStatus.OK);
+
+    }
+
 
 
     @PostMapping("")
@@ -168,6 +187,7 @@ public class PetResources {
         return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
 
     }
+
 
 
     private ResponseEntity SendErrorValid(String field, String message){

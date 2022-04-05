@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface PetService {
     Page<PetEntity> getAllPet(Pageable pageable);
+    Page<PetEntity> getAllByCategor(Pageable pageable, String category);
     PetEntity savePet(PetEntity pet);
     PetEntity updatePetInfo(PetEntity service, InfoPetRequest petInfo);
     PetEntity getPet(String id);
