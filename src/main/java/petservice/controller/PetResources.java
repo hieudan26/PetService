@@ -20,6 +20,7 @@ import petservice.Handler.RecordNotFoundException;
 import petservice.Service.PetService;
 import petservice.mapping.PetMapping;
 import petservice.model.Entity.PetEntity;
+import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.PetResources.AddPetRequest;
 import petservice.model.payload.request.PetResources.DeletePetsRequest;
 import petservice.model.payload.request.PetResources.InfoPetRequest;
@@ -30,6 +31,7 @@ import petservice.security.JWT.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,19 +52,45 @@ public class PetResources {
 
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponseWithPagination> getPets(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("Name"));
+    public ResponseEntity<SuccessResponseWithPagination> getPets(
+            @RequestParam(required=false) String all,       @RequestParam(required=false) String name,
+            @RequestParam(required=false) String gender,  @RequestParam(required=false) String location,
+            @RequestParam(required=false) String breed,     @RequestParam(required=false) String description,
+            @RequestParam(required=false) String category,
+            @RequestParam(required=false) Boolean vaccinated,   @RequestParam(required=false) Boolean status,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "3") int size,
+                                                            @RequestParam(defaultValue = "Id") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Map<String,String> ParamMap = new HashMap<>();
+        if(name != null)
+            ParamMap.put("name",name);
+        if(gender != null)
+            ParamMap.put("gender",gender);
+        if(location != null)
+            ParamMap.put("location",location);
+        if(breed != null)
+            ParamMap.put("breed",breed);
+        if(description != null)
+            ParamMap.put("description",description);
+        if(category != null)
+            ParamMap.put("category",category);
+        if(status != null)
+            ParamMap.put("status",status.toString());
+        if(vaccinated != null)
+            ParamMap.put("vaccinated",vaccinated.toString());
+        if(all != null)
+            ParamMap.put("all",all);
 
-        Page<PetEntity> petEntityPage = petService.getAllPet(pageable);
-        if (petEntityPage == null) {
-            throw new RecordNotFoundException("No PetEntity existing ");
+        Page<PetEntity> petPage = petService.getAllPet(ParamMap,pageable);
+        if(petPage == null) {
+            throw new RecordNotFoundException("No Pet existing " );
         }
-        SuccessResponseWithPagination response = new SuccessResponseWithPagination(petEntityPage);
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(petPage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("List pets");
         response.setSuccess(true);
-        response.getData().put("pets", petEntityPage.getContent());
+        response.getData().put("pets", petPage.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response, HttpStatus.OK);
     }
 
@@ -175,7 +203,7 @@ public class PetResources {
 
         PetEntity pet = petService.findById(id);
 
-        petService.deletImagePet(id);
+        petService.deleteImagePet(id);
         pet = petService.updatePetInfo(pet,petInfo);
 
         SuccessResponse response = new SuccessResponse();
