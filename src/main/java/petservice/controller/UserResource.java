@@ -65,7 +65,7 @@ public class UserResource {
         if(firstname != null)
             ParamMap.put("firstName",firstname);
         if(lastname != null)
-            ParamMap.put("lastname",lastname);
+            ParamMap.put("lastName",lastname);
         if(email != null)
             ParamMap.put("email",email);
         if(phone != null)
