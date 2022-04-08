@@ -4,12 +4,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import petservice.model.Entity.ServiceEntity;
+import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.ServiceResources.InfoServiceRequest;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public interface ServiceService {
+    Page<ServiceEntity> getAllService(Map<String,String> ParamMap, Pageable pageable);
     Page<ServiceEntity> getAllService(Pageable pageable);
     ServiceEntity saveService(ServiceEntity service);
     ServiceEntity updateServiceInfo(ServiceEntity service, InfoServiceRequest serviceInfo);

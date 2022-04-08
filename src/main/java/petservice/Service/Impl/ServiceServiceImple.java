@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import petservice.Service.ServiceService;
 import petservice.mapping.ServiceMapping;
 import petservice.model.Entity.ServiceEntity;
+import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.ServiceResources.InfoServiceRequest;
 import petservice.repository.ServiceRepository;
+import petservice.repository.specification.UserSpecification;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -24,6 +28,14 @@ import java.util.Optional;
 @Slf4j
 public class ServiceServiceImple implements ServiceService {
     final ServiceRepository serviceRepository;
+
+    @Override
+    public Page<ServiceEntity> getAllService(Map<String,String> ParamMap, Pageable pageable) {
+        if(ParamMap.get("all") != null)
+            return serviceRepository.findAll(Specification.where(UserSpecification.getFilterAllRows(ParamMap.get("all"))),pageable);
+        else
+            return serviceRepository.findAll(Specification.where(UserSpecification.getFilter(ParamMap)),pageable);
+    }
 
     @Override
     public Page<ServiceEntity> getAllService(Pageable pageable) {
