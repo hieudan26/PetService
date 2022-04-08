@@ -75,17 +75,17 @@ public class ServiceResource {
         if(all != null)
             ParamMap.put("all",all);
 
-        Page<ServiceEntity> servicePage = userService.getAllUser(ParamMap,pageable);
+        Page<ServiceEntity> servicePage = serviceService.getAllService(ParamMap,pageable);
         if(servicePage == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
 
 
-        SuccessResponseWithPagination response = new SuccessResponseWithPagination(userPage);
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(servicePage);
         response.setStatus(HttpStatus.OK.value());
-        response.setMessage("list users");
+        response.setMessage("list service");
         response.setSuccess(true);
-        response.getData().put("users",userPage.getContent());
+        response.getData().put("service",servicePage.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 

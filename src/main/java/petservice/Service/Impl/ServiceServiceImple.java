@@ -12,6 +12,7 @@ import petservice.model.Entity.ServiceEntity;
 import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.ServiceResources.InfoServiceRequest;
 import petservice.repository.ServiceRepository;
+import petservice.repository.specification.ServiceSpecification;
 import petservice.repository.specification.UserSpecification;
 
 import javax.transaction.Transactional;
@@ -32,9 +33,9 @@ public class ServiceServiceImple implements ServiceService {
     @Override
     public Page<ServiceEntity> getAllService(Map<String,String> ParamMap, Pageable pageable) {
         if(ParamMap.get("all") != null)
-            return serviceRepository.findAll(Specification.where(UserSpecification.getFilterAllRows(ParamMap.get("all"))),pageable);
+            return serviceRepository.findAll(Specification.where(ServiceSpecification.getFilterAllRows(ParamMap.get("all"))),pageable);
         else
-            return serviceRepository.findAll(Specification.where(UserSpecification.getFilter(ParamMap)),pageable);
+            return serviceRepository.findAll(Specification.where(ServiceSpecification.getFilter(ParamMap)),pageable);
     }
 
     @Override
