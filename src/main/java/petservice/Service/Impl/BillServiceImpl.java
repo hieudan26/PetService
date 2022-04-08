@@ -3,6 +3,7 @@ package petservice.Service.Impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import petservice.Service.BillService;
@@ -38,12 +39,12 @@ public class BillServiceImpl implements BillService {
     PetService petService;
 
     @Override
-    public List<BillEntity> getAllBills(Pageable pageable) {
+    public Page<BillEntity> getAllBills(Pageable pageable) {
         return billRepository.findAllByIdNotNull(pageable);
     }
 
     @Override
-    public List<BillEntity> getAllByUser(UserEntity user, Pageable pageable) {
+    public Page<BillEntity> getAllByUser(UserEntity user, Pageable pageable) {
         if (billRepository.findAllByUserBuyPet(user, pageable).isEmpty()) {
             return null;
         } else {
@@ -61,7 +62,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillEntity> getAllByPaymentDate(LocalDateTime time, Pageable pageable) {
+    public Page<BillEntity> getAllByPaymentDate(LocalDateTime time, Pageable pageable) {
         if (billRepository.findAllByPaymentDate(time, pageable).isEmpty()) {
             return null;
         } else {
@@ -70,7 +71,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillEntity> getAllByUserBuyPetAndPaymentDate(UserEntity user, LocalDateTime time, Pageable pageable) {
+    public Page<BillEntity> getAllByUserBuyPetAndPaymentDate(UserEntity user, LocalDateTime time, Pageable pageable) {
         if (billRepository.findAllByUserBuyPetAndPaymentDate(user, time, pageable).isEmpty()) {
             return null;
         } else {
@@ -79,7 +80,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillEntity> getAllByMethodPayment(String methodPayment, Pageable pageable) {
+    public Page<BillEntity> getAllByMethodPayment(String methodPayment, Pageable pageable) {
         if (billRepository.findAllByMethodPayment(methodPayment, pageable).isEmpty()) {
             return null;
         } else {

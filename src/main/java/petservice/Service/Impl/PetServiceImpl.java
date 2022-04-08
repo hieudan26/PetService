@@ -2,7 +2,9 @@ package petservice.Service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import petservice.Service.PetService;
 import petservice.mapping.PetMapping;
@@ -10,9 +12,11 @@ import petservice.model.Entity.PetEntity;
 import petservice.model.payload.request.PetResources.InfoPetRequest;
 import petservice.repository.ImagePetRepository;
 import petservice.repository.PetRepository;
+import petservice.repository.specification.PetSpecification;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 @Service
 //@RequiredArgsConstructor sẽ sinh ra một constructor với các tham số bắt buộc phải có giá trị. Các thuộc tính final và các thuộc tính được đánh dấu @NonNull sẽ bị bắt buộc phải chứa giá trị trong constructor.
@@ -26,8 +30,19 @@ public class PetServiceImpl implements PetService {
     final ImagePetRepository imagePetRepository;
 
     @Override
-    public List<PetEntity> getAllPet(Pageable pageable) {
-        return petRepository.findAllByIdNotNull(pageable);
+    public Page<PetEntity> getAllPet(Map<String,String> ParamMap, Pageable pageable) {
+        if(ParamMap.get("all") != null)
+            return petRepository.findAll(Specification.where(PetSpecification.getFilterAllRows(ParamMap.get("all"))),pageable);
+        else
+            return petRepository.findAll(Specification.where(PetSpecification.getFilter(ParamMap)),pageable);
+    }
+
+    @Override
+    public Page<PetEntity> getAllByCategor(Pageable pageable, String category) {
+        if (petRepository.findAllByCategory(pageable,category).isEmpty()) {
+            return null;
+        }
+        return petRepository.findAllByCategory(pageable,category);
     }
 
     @Override
@@ -43,7 +58,11 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public PetEntity getPet(String id) {
+
         log.info("Fetching pet {}", id);
+        if (petRepository.findById(id).isEmpty()){
+            return null;
+        }
         return petRepository.findById(id).get();
     }
 
@@ -65,7 +84,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public void deletImagePet(String id) {
+    public void deleteImagePet(String id) {
         imagePetRepository.deleteByPet(findById(id));
     }
 

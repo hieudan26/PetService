@@ -3,7 +3,9 @@ package petservice.Service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import petservice.Service.UserService;
 import petservice.mapping.UserMapping;
@@ -12,25 +14,27 @@ import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.UserResources.InfoUserRequest;
 import petservice.repository.RoleRepository;
 import petservice.repository.UserRepository;
+import petservice.repository.specification.UserSpecification;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImpl implements UserService {
+    @Override
+    public Page<UserEntity> Search(Pageable pageable) {
+        return null;
+    }
 
     final UserRepository userRepository;
     final RoleRepository roleRepository;
 
     @Override
-    public List<UserEntity> getAllUser(Pageable pageable) {
-        if (userRepository.findAllByIdNotNull(pageable).isEmpty()){
-            return null;
-        }
-        return userRepository.findAllByIdNotNull(pageable);
+    public Page<UserEntity> getAllUser(Map<String,String> ParamMap, Pageable pageable) {
+        if(ParamMap.get("all") != null)
+            return userRepository.findAll(Specification.where(UserSpecification.getFilterAllRows(ParamMap.get("all"))),pageable);
+        else
+            return userRepository.findAll(Specification.where(UserSpecification.getFilter(ParamMap)),pageable);
     }
 
     @Override

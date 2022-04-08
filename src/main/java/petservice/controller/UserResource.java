@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ import petservice.model.payload.request.UserResources.RoleToUserRequest;
 import petservice.model.payload.request.UserResources.StatusRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
+import petservice.model.payload.response.SuccessResponseWithPagination;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -48,21 +50,49 @@ public class UserResource {
 
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getUsers(  @RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "3") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("CreateAt"));
+    public ResponseEntity<SuccessResponseWithPagination> getUsers(
+            @RequestParam(required=false) String all,       @RequestParam(required=false) String firstname,
+            @RequestParam(required=false) String lastname,  @RequestParam(required=false) String email,
+            @RequestParam(required=false) String phone,     @RequestParam(required=false) String username,
+            @RequestParam(required=false) Boolean status,   @RequestParam(required=false) Boolean active,
 
-        List<UserEntity> userList = userService.getAllUser(pageable);
-        if(userList == null) {
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "3") int size,
+                                                                @RequestParam(defaultValue = "CreateAt") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Map<String,String> ParamMap = new HashMap<>();
+
+        if(firstname != null)
+            ParamMap.put("firstName",firstname);
+        if(lastname != null)
+            ParamMap.put("lastName",lastname);
+        if(email != null)
+            ParamMap.put("email",email);
+        if(phone != null)
+            ParamMap.put("phone",phone);
+        if(username != null)
+            ParamMap.put("username",username);
+        if(status != null)
+            ParamMap.put("status",status.toString());
+        if(active != null)
+            ParamMap.put("active",active.toString());
+        if(all != null)
+            ParamMap.put("all",all);
+
+        Page<UserEntity> userPage = userService.getAllUser(ParamMap,pageable);
+        if(userPage == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+
+
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(userPage);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list users");
         response.setSuccess(true);
-        response.getData().put("users",userList);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("users",userPage.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
+
 
     @GetMapping("{id}")
     @ResponseBody
@@ -126,9 +156,9 @@ public class UserResource {
             throw new MethodArgumentNotValidException(errors);
         }
         if (request == null) {
-            LOGGER.info("Inside addIssuer, adding: " + request.toString());
             throw new HttpMessageNotReadableException("Missing field");
         } else {
+            LOGGER.info("Inside addIssuer, adding: " + request);
             LOGGER.info("Inside addIssuer...");
         }
 
@@ -205,7 +235,7 @@ public class UserResource {
 
     @DeleteMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> deleteUser(@RequestBody @Valid DeletePetsRequest deleteRequest, BindingResult errors, HttpServletRequest request) throws Exception {
+    public ResponseEntity<SuccessResponse> deleteUser(@RequestBody @Valid DeletePetsRequest deleteRequest, BindingResult errors) throws Exception {
         if (errors.hasErrors()) {
             throw new MethodArgumentNotValidException(errors);
         }

@@ -1,5 +1,6 @@
 package petservice.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -15,12 +16,12 @@ import java.util.Optional;
 
 @EnableJpaRepositories
 public interface BillRepository extends JpaRepository<BillEntity, String> {
-    List<BillEntity> findAllByIdNotNull(Pageable pageable);
-    List<BillEntity> findAllByUserBuyPet(UserEntity user, Pageable pageable);
+    Page<BillEntity> findAllByIdNotNull(Pageable pageable);
+    Page<BillEntity> findAllByUserBuyPet(UserEntity user, Pageable pageable);
     Optional<BillEntity> findByPetSale(PetEntity pet);
-    List<BillEntity> findAllByPaymentDate(LocalDateTime time, Pageable pageable);
-    List<BillEntity> findAllByUserBuyPetAndPaymentDate(UserEntity user, LocalDateTime time, Pageable pageable);
-    List<BillEntity> findAllByMethodPayment(String methodPayment, Pageable pageable);
+    Page<BillEntity> findAllByPaymentDate(LocalDateTime time, Pageable pageable);
+    Page<BillEntity> findAllByUserBuyPetAndPaymentDate(UserEntity user, LocalDateTime time, Pageable pageable);
+    Page<BillEntity> findAllByMethodPayment(String methodPayment, Pageable pageable);
     Optional<BillEntity> findById(String id);
     Boolean existsByPetSale(PetEntity pet);
     void deleteById(String id);

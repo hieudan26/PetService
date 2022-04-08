@@ -3,6 +3,7 @@ package petservice.Service.Impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import petservice.Service.BookingServiceService;
@@ -32,7 +33,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     BookingServiceMapping bookingServiceMapping;
 
     @Override
-    public List<BookingServiceEntity> getAllBookingService(Pageable pageable) {
+    public Page<BookingServiceEntity> getAllBookingService(Pageable pageable) {
         if (bookingServiceRepository.findAllByIdNotNull(pageable).isEmpty()){
             return null;
         }
@@ -40,7 +41,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getAllByService(ServiceEntity service, Pageable pageable) {
+    public Page<BookingServiceEntity> getAllByService(ServiceEntity service, Pageable pageable) {
         if (bookingServiceRepository.findAllByService(service, pageable).isEmpty()){
             return null;
         }
@@ -48,7 +49,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getAllByUserBookServiceName(String name, Pageable pageable) {
+    public Page<BookingServiceEntity> getAllByUserBookServiceName(String name, Pageable pageable) {
         if (bookingServiceRepository.findAllByUserBookService_UserName(name, pageable).isEmpty()){
             return null;
         }
@@ -56,7 +57,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getAllByStatus(String status, Pageable pageable) {
+    public Page<BookingServiceEntity> getAllByStatus(String status, Pageable pageable) {
         if (bookingServiceRepository.findAllByStatus(status, pageable).isEmpty()){
             return null;
         }
@@ -64,7 +65,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getAllByPayment(boolean status, Pageable pageable) {
+    public Page<BookingServiceEntity> getAllByPayment(boolean status, Pageable pageable) {
         if (bookingServiceRepository.findAllByPayment(status, pageable).isEmpty()){
             return null;
         }
@@ -72,7 +73,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getAllByDateBooking(LocalDateTime time, Pageable pageable) {
+    public Page<BookingServiceEntity> getAllByDateBooking(LocalDateTime time, Pageable pageable) {
         if (bookingServiceRepository.findAllByDateBooking(time, pageable).isEmpty()){
             return null;
         }
@@ -80,7 +81,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getAllByUserBookServiceAndServiceAndDateBooking(UserEntity user, ServiceEntity service, LocalDateTime time, Pageable pageable) {
+    public Page<BookingServiceEntity> getAllByUserBookServiceAndServiceAndDateBooking(UserEntity user, ServiceEntity service, LocalDateTime time, Pageable pageable) {
         if (bookingServiceRepository.findALLByUserBookServiceAndServiceAndDateBooking(user, service, time, pageable).isEmpty()){
             return null;
         }
@@ -88,7 +89,7 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public List<BookingServiceEntity> getALLByService_NameContaining(String Name, Pageable pageable) {
+    public Page<BookingServiceEntity> getALLByService_NameContaining(String Name, Pageable pageable) {
         if (bookingServiceRepository.findALLByService_NameContaining(Name, pageable ).isEmpty()){
             return null;
         }

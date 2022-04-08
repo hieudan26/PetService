@@ -29,9 +29,12 @@ public class AddPetRequest {
     @NotNull (message = "Thiếu size")
     private BigInteger size;
     private String description;
+    @NotNull(message = "Thiếu vacxin")
     private Boolean vaccinated;
     private Boolean status;
     @NotNull(message = "Thiếu giá")
     private BigInteger price;
+    @NotBlank(message = "Thiếu loại")
+    private String category;
     private List<AddImagePetRequest> imagePetEntityList;
 }

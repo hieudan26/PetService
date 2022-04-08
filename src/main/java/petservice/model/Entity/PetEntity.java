@@ -24,6 +24,7 @@ public class PetEntity {
     private boolean vaccinated;
     private boolean status;
     private BigInteger price;
+    private String category;
     private List<ImagePetEntity> imagePetEntityList;
     private BillEntity billEntity;
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
@@ -157,6 +158,16 @@ public class PetEntity {
 
     public void setPrice(BigInteger price) {
         this.price = price;
+    }
+
+    @Basic
+    @Column(name = "\"Category\"")
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override

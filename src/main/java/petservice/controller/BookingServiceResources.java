@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import petservice.model.payload.request.BookingServiceResources.AddBookingServic
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
+import petservice.model.payload.response.SuccessResponseWithPagination;
 import petservice.security.JWT.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -143,20 +145,20 @@ public class BookingServiceResources {
 //    ADMIN
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBookingService(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "3") int size) {
+    public ResponseEntity<SuccessResponseWithPagination> getAllBookingService(@RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
-        List<BookingServiceEntity> bookingServices = bookingService.getAllBookingService(pageable);
+        Page<BookingServiceEntity> bookingServices = bookingService.getAllBookingService(pageable);
         if(bookingServices == null) {
             throw new RecordNotFoundException("No booking service existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(bookingServices);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("booking services",bookingServices.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
 //    ADMIN + USER
@@ -185,47 +187,47 @@ public class BookingServiceResources {
 //    ADMIN
     @GetMapping("/find/service")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBookingServiceByServiceName(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<SuccessResponseWithPagination> getAllBookingServiceByServiceName(@RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "3") int size, @RequestParam String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
-        List<BookingServiceEntity> bookingServices = bookingService.getALLByService_NameContaining(name, pageable);
+        Page<BookingServiceEntity> bookingServices = bookingService.getALLByService_NameContaining(name, pageable);
 
         if(bookingServices == null) {
             throw new RecordNotFoundException("No booking service existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(bookingServices);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("booking services",bookingServices.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
 //    ADMIN
     @GetMapping("/find/user")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBookingServiceByUsername(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<SuccessResponseWithPagination> getAllBookingServiceByUsername(@RequestParam(defaultValue = "0") int page,
                                                                              @RequestParam(defaultValue = "3") int size, @RequestParam String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
-        List<BookingServiceEntity> bookingServices = bookingService.getAllByUserBookServiceName(name, pageable);
+        Page<BookingServiceEntity> bookingServices = bookingService.getAllByUserBookServiceName(name, pageable);
 
         if(bookingServices == null) {
             throw new RecordNotFoundException("No booking service existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(bookingServices);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("booking services",bookingServices.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
 //  ADMIN
     @GetMapping("/find/status")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBookingServiceByStatus(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<SuccessResponseWithPagination> getAllBookingServiceByStatus(@RequestParam(defaultValue = "0") int page,
                                                                           @RequestParam(defaultValue = "3") int size, @RequestParam String status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
@@ -236,17 +238,17 @@ public class BookingServiceResources {
             status = "";
         }
         finally {
-            List<BookingServiceEntity> bookingServices = bookingService.getAllByStatus(status, pageable);
+            Page<BookingServiceEntity> bookingServices = bookingService.getAllByStatus(status, pageable);
 
             if(bookingServices == null) {
                 throw new RecordNotFoundException("No booking service existing " );
             }
-            SuccessResponse response = new SuccessResponse();
+            SuccessResponseWithPagination response = new SuccessResponseWithPagination(bookingServices);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("list booking services");
             response.setSuccess(true);
-            response.getData().put("booking services",bookingServices);
-            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+            response.getData().put("booking services",bookingServices.getContent());
+            return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
         }
     }
 
@@ -254,7 +256,7 @@ public class BookingServiceResources {
 //    ADMIN
     @GetMapping("/find/date")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBookingServiceBydate(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<SuccessResponseWithPagination> getAllBookingServiceBydate(@RequestParam(defaultValue = "0") int page,
                                                                         @RequestParam(defaultValue = "3") int size, @RequestParam String date) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
@@ -262,17 +264,17 @@ public class BookingServiceResources {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
 
-            List<BookingServiceEntity> bookingServices = bookingService.getAllByDateBooking(dateTime, pageable);
+            Page<BookingServiceEntity> bookingServices = bookingService.getAllByDateBooking(dateTime, pageable);
 
             if(bookingServices == null) {
                 throw new RecordNotFoundException("No booking service existing " );
             }
-            SuccessResponse response = new SuccessResponse();
+            SuccessResponseWithPagination response = new SuccessResponseWithPagination(bookingServices);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("list booking services");
             response.setSuccess(true);
-            response.getData().put("booking services",bookingServices);
-            return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+            response.getData().put("booking services",bookingServices.getContent());
+            return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
         }
         catch (Exception e) {
             throw new Exception("Datetime is wrong format");
@@ -284,23 +286,23 @@ public class BookingServiceResources {
 //    ADMin
     @GetMapping("/find/paystatus")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> getAllBookingServiceByPayment(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<SuccessResponseWithPagination> getAllBookingServiceByPayment(@RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "3") int size, @RequestParam String pay) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateBooking"));
 
         Boolean payStatus = Boolean.valueOf(pay);
 
-        List<BookingServiceEntity> bookingServices = bookingService.getAllByPayment(payStatus, pageable);
+        Page<BookingServiceEntity> bookingServices = bookingService.getAllByPayment(payStatus, pageable);
 
         if(bookingServices == null) {
             throw new RecordNotFoundException("No booking service existing " );
         }
-        SuccessResponse response = new SuccessResponse();
+        SuccessResponseWithPagination response = new SuccessResponseWithPagination(bookingServices);
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices);
-        return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
+        response.getData().put("booking services",bookingServices.getContent());
+        return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
 
     }
 

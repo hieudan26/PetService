@@ -1,6 +1,7 @@
 package petservice.Service;
 
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -10,11 +11,12 @@ import petservice.model.payload.request.UserResources.InfoUserRequest;
 
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Service
 public interface UserService {
-    List<UserEntity> getAllUser(Pageable pageable);
+    Page<UserEntity> getAllUser(Map<String,String> ParamMap, Pageable pageable);
     UserEntity saveUser(UserEntity user, String roleName);
     RoleEntity saveRole(RoleEntity role);
     void addRoleToUser(String email, String roleName);
@@ -33,4 +35,5 @@ public interface UserService {
     UserEntity updateActive(UserEntity user);
     UserEntity updateAvatar(UserEntity user,String url);
     UserEntity setStatus(UserEntity user,Boolean status);
+    Page<UserEntity> Search(Pageable pageable);
 }
