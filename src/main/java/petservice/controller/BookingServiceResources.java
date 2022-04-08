@@ -157,7 +157,7 @@ public class BookingServiceResources {
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices.getContent());
+        response.getData().put("bookingServices",bookingServices.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
@@ -200,7 +200,7 @@ public class BookingServiceResources {
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices.getContent());
+        response.getData().put("bookingServices",bookingServices.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
@@ -220,7 +220,7 @@ public class BookingServiceResources {
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices.getContent());
+        response.getData().put("bookingServices",bookingServices.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
@@ -247,7 +247,7 @@ public class BookingServiceResources {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("list booking services");
             response.setSuccess(true);
-            response.getData().put("booking services",bookingServices.getContent());
+            response.getData().put("bookingServices",bookingServices.getContent());
             return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
         }
     }
@@ -273,7 +273,7 @@ public class BookingServiceResources {
             response.setStatus(HttpStatus.OK.value());
             response.setMessage("list booking services");
             response.setSuccess(true);
-            response.getData().put("booking services",bookingServices.getContent());
+            response.getData().put("bookingServices",bookingServices.getContent());
             return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
         }
         catch (Exception e) {
@@ -301,7 +301,7 @@ public class BookingServiceResources {
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list booking services");
         response.setSuccess(true);
-        response.getData().put("booking services",bookingServices.getContent());
+        response.getData().put("bookingServices",bookingServices.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
 
     }
