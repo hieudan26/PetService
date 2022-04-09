@@ -23,4 +23,5 @@ public class InfoServiceRequest {
     private BigInteger slot;
     @NotNull(message = "Thiếu status")
     private Boolean status;
+    private String image;
 }

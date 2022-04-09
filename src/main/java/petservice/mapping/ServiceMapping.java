@@ -12,6 +12,7 @@ public class ServiceMapping {
         newService.setDescription(registerRequest.getDescription());
         newService.setPrice(registerRequest.getPrice());
         newService.setSlot(registerRequest.getSlot());
+        newService.setImage(registerRequest.getImage());
         if (registerRequest.getStatus() == null) {
             newService.setStatus(false);
         }
@@ -28,6 +29,7 @@ public class ServiceMapping {
         service.setPrice(serviceInfo.getPrice());
         service.setSlot(serviceInfo.getSlot());
         service.setStatus(serviceInfo.getStatus());
+        service.setImage(serviceInfo.getImage());
         return service;
     }
 }

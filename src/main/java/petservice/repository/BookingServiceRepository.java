@@ -24,6 +24,6 @@ public interface BookingServiceRepository extends JpaRepository<BookingServiceEn
     Optional<BookingServiceEntity> findById(String id);
     Optional<BookingServiceEntity> findByIdAndUserBookService(String id, UserEntity user);
 
+    List<BookingServiceEntity> findAllByService(ServiceEntity service);
     Page<BookingServiceEntity> findALLByService_NameContaining(String Name, Pageable pageable);
-    public Long countAllByDateBookingAndService(LocalDateTime time, ServiceEntity service);
 }

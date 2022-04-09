@@ -15,12 +15,14 @@ import petservice.model.payload.request.BookingServiceResources.AddBookingServic
 import petservice.model.payload.request.BookingServiceResources.AddListBookingServiceByCustomerRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 import petservice.repository.BookingServiceRepository;
+import petservice.repository.ServiceRepository;
 
 import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,8 @@ import java.util.Optional;
 public class BookingSerivceSerivceImpl implements BookingServiceService {
 
    final BookingServiceRepository bookingServiceRepository;
+
+   final ServiceRepository serviceRepository;
 
    @Autowired
     BookingServiceMapping bookingServiceMapping;
@@ -101,7 +105,13 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
 
     @Override
     public BookingServiceEntity saveBookingService(BookingServiceEntity bookingService) {
-        return bookingServiceRepository.save(bookingService);
+        bookingServiceRepository.save(bookingService);
+        if (isFullSlotService(bookingService.getDateBooking(), bookingService.getService())){
+            ServiceEntity service = bookingService.getService();
+            service.setStatus(false);
+            serviceRepository.save(service);
+        }
+        return bookingService;
     }
 
     @Override
@@ -116,7 +126,16 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
 
     @Override
     public Long countAllByDateBookingAndService(LocalDateTime time, ServiceEntity service) {
-        return bookingServiceRepository.countAllByDateBookingAndService(time,service);
+        long count = 0;
+        List<BookingServiceEntity> bookingServiceEntities = bookingServiceRepository.findAllByService(service);
+        Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
+        for(BookingServiceEntity item : bookingServiceEntities){
+            Date dateBooking = Date.from(item.getDateBooking().atZone(ZoneId.systemDefault()).toInstant());
+            if (date.equals(dateBooking)){
+                count ++;
+            }
+        }
+        return Long.valueOf(count);
     }
 
     @Override
@@ -125,12 +144,10 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
             throw new Exception("Datatime is not valid");
         }
 
-        BigInteger maxSlot = newBooking.getService().getSlot();
-        Long slot =  this.countAllByDateBookingAndService(newBooking.getDateBooking(), newBooking.getService());
-        if (slot.intValue() < maxSlot.intValue()){
-            return true;
+        if (isFullSlotService(newBooking.getDateBooking(), newBooking.getService())){
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -154,8 +171,8 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
                 if (!isAvailableService(newBookingService)){
                     throw new Exception("service not available");
                 }
-                saveBookingService(newBookingService);
-                bookingServiceEntities.add(newBookingService);
+                BookingServiceEntity bookingServiceEntity =  saveBookingService(newBookingService);
+                bookingServiceEntities.add(bookingServiceEntity);
             }
             return bookingServiceEntities;
 
@@ -173,5 +190,15 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
             return null;
         }
         return booking.get();
+    }
+
+    @Override
+    public Boolean isFullSlotService(LocalDateTime date, ServiceEntity service) {
+        BigInteger maxSlot = service.getSlot();
+        Long slot = countAllByDateBookingAndService(date, service);
+        if (slot.intValue() < maxSlot.intValue()) {
+            return false;
+        }
+        return true;
     }
 }

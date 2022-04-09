@@ -35,4 +35,6 @@ public interface BookingServiceService {
 
     List<BookingServiceEntity>  saveListBookingService (AddListBookingServiceByCustomerRequest bookingInfo, UserEntity user) throws Exception;
     BookingServiceEntity findById(String id);
+
+    Boolean isFullSlotService(LocalDateTime date, ServiceEntity service);
 }
