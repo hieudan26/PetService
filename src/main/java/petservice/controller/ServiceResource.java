@@ -85,7 +85,7 @@ public class ServiceResource {
         response.setStatus(HttpStatus.OK.value());
         response.setMessage("list service");
         response.setSuccess(true);
-        response.getData().put("service",servicePage.getContent());
+        response.getData().put("services",servicePage.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
