@@ -23,7 +23,7 @@ public class BookingServiceMapping {
     @Autowired
     ServiceService serviceService;
 
-    public  BookingServiceEntity UpdateBookingServiceByInfo (BookingServiceEntity bookingService, InfoBookingServiceRequest infoBookingServiceRequest) throws Exception{
+    public  BookingServiceEntity updateBookingServiceByInfoAndCustomer (BookingServiceEntity bookingService, InfoBookingServiceRequest infoBookingServiceRequest, UserEntity user) throws Exception{
 
         if (StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()).equals("")){
             throw  new Exception("Status is not valid");
@@ -33,13 +33,8 @@ public class BookingServiceMapping {
         bookingService.setPayment(infoBookingServiceRequest.getPayment().booleanValue());
 
 
-        UserEntity user = userService.findByUsername(infoBookingServiceRequest.getUserBookService());
-        if (user == null){
-            throw new Exception("user booking is not exist");
-        }
-        else{
-            bookingService.setUserBookService(user);
-        }
+        bookingService.setUserBookService(user);
+
         ServiceEntity service = serviceService.findById(infoBookingServiceRequest.getServiceId());
 
         if (service == null){
@@ -58,21 +53,15 @@ public class BookingServiceMapping {
         return bookingService;
     }
 
-    public   BookingServiceEntity ModelToEntity(AddBookingServiceRequest request) throws Exception {
+    public   BookingServiceEntity modelToEntityAddByCustomer(AddBookingServiceRequest request, UserEntity user) throws Exception {
         BookingServiceEntity newBookingService = new BookingServiceEntity();
 
         newBookingService.setPayment(false);
         newBookingService.setStatus(StatusBookingService.StatusBooking.WAITING.toString());
-
-        UserEntity user = userService.findByUsername(request.getUserBookService());
-        if (user == null){
-            throw new Exception("user booking is not exist");
-        }
-        else{
-            newBookingService.setUserBookService(user);
-        }
+        newBookingService.setUserBookService(user);
 
         ServiceEntity service = serviceService.findById(request.getServiceId());
+
         if (service == null){
             throw new Exception("service is not exist");
         }
@@ -80,14 +69,7 @@ public class BookingServiceMapping {
             newBookingService.setService(service);
         }
 
-        try{
-            LocalDateTime dateTime = request.getDateBooking();
-            newBookingService.setDateBooking(dateTime);
-        }catch (Exception e) {
-            throw new Exception("Datetime is wrong format");
-        }
-
-
+        newBookingService.setDateBooking(request.getDateBooking());
         return newBookingService;
     }
 

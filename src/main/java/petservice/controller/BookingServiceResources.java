@@ -18,10 +18,13 @@ import petservice.Handler.HttpMessageNotReadableException;
 import petservice.Handler.MethodArgumentNotValidException;
 import petservice.Handler.RecordNotFoundException;
 import petservice.Service.BookingServiceService;
+import petservice.Service.UserService;
 import petservice.common.StatusBookingService;
 import petservice.mapping.BookingServiceMapping;
 import petservice.model.Entity.BookingServiceEntity;
+import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.BookingServiceResources.AddBookingServiceRequest;
+import petservice.model.payload.request.BookingServiceResources.AddListBookingServiceByCustomerRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
@@ -55,6 +58,9 @@ public class BookingServiceResources {
     @Autowired
     BookingServiceMapping bookingServiceMapping;
 
+    @Autowired
+    UserService userService;
+
 //   Admin + USER
     @PostMapping("")
     @ResponseBody
@@ -71,12 +77,10 @@ public class BookingServiceResources {
                 throw new MethodArgumentNotValidException(errors);
             }
 
-            BookingServiceEntity newBooking = bookingServiceMapping.ModelToEntity(bookingInfo);
+            UserEntity user = userService.findByUsername(jwtUtils.getUserNameFromJwtToken(accessToken));
 
-            if (newBooking.getUserBookService() == null){
-                LOGGER.info("Username not exist: " + bookingInfo.getUserBookService());
-                throw new Exception("user booking is not exist");
-            }
+            BookingServiceEntity newBooking = bookingServiceMapping.modelToEntityAddByCustomer(bookingInfo, user);
+
 
             if (newBooking.getService() == null){
                 LOGGER.info("Service not exist: " + bookingInfo.getServiceId());
@@ -103,6 +107,44 @@ public class BookingServiceResources {
     }
 
 
+
+    @PostMapping("/list")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> addListNewBookingService(@RequestBody @Valid AddListBookingServiceByCustomerRequest bookingInfo, BindingResult errors, HttpServletRequest request) throws Exception {
+        try {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String accessToken = authorizationHeader.substring("Bearer ".length());
+
+                if (jwtUtils.validateExpiredToken(accessToken) == true) {
+                    throw new BadCredentialsException("access token is  expired");
+                }
+
+                if (errors.hasErrors()) {
+                    throw new MethodArgumentNotValidException(errors);
+                }
+
+                UserEntity user = userService.findByUsername(jwtUtils.getUserNameFromJwtToken(accessToken));
+
+                List<BookingServiceEntity> bookingServiceEntities =  bookingService.saveListBookingService(bookingInfo, user);
+
+                SuccessResponse response = new SuccessResponse();
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Adding new booking service is successful");
+                response.setSuccess(true);
+                response.getData().put("booking", bookingServiceEntities );
+
+                return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
+            } else {
+                throw new BadCredentialsException("access token is missing");
+            }
+        }catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.MULTI_STATUS);
+        }
+    }
+
+
+
 //    Admin + USER
     @PutMapping("/{id}")
     @ResponseBody
@@ -119,15 +161,15 @@ public class BookingServiceResources {
                 throw new MethodArgumentNotValidException(errors);
             }
 
-            BookingServiceEntity updateBooking = bookingService.findById(id);
+            UserEntity user = userService.findByUsername(jwtUtils.getUserNameFromJwtToken(accessToken));
+            BookingServiceEntity updateBooking = bookingService.findByIdAndUserBookService(id, user);
 
             if (updateBooking == null){
                 LOGGER.info("Not found booking: " + id);
                 throw new Exception("Not found booking");
             }
 
-
-            updateBooking = bookingService.updateBookingServiceInfo(updateBooking, bookingInfo);
+            updateBooking = bookingService.updateBookingServiceInfoCustomer(updateBooking, bookingInfo, user);
 
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
