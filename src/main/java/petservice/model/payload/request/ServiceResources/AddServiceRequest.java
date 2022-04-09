@@ -21,4 +21,5 @@ public class AddServiceRequest {
     @NotNull(message = "Thiếu slot")
     private BigInteger slot;
     private Boolean status;
+    private String image;
 }

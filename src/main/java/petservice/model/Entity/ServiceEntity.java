@@ -16,6 +16,7 @@ public class ServiceEntity {
     private BigInteger price;
     private BigInteger slot;
     private Boolean status;
+    private String image;
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -79,6 +80,16 @@ public class ServiceEntity {
         this.status = status;
     }
 
+    @Basic
+    @Column(name = "\"Image\"")
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,6 +103,7 @@ public class ServiceEntity {
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
         if (slot != null ? !slot.equals(that.slot) : that.slot != null) return false;
+        if (image != null ? !image.equals(that.image) : that.image != null) return false;
 
         return true;
     }
@@ -104,6 +116,7 @@ public class ServiceEntity {
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (slot != null ? slot.hashCode() : 0);
         result = 31 * result + (status ? 1 : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 }

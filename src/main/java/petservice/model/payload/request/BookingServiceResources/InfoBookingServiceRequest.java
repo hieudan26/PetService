@@ -18,8 +18,6 @@ public class InfoBookingServiceRequest {
     @NotNull(message = "thieu tinh trang")
     private Boolean payment;
     private String status;
-    @NotEmpty(message = "thieu nguoi dat")
-    private String userBookService;
     @NotEmpty(message = "Thiếu service id")
     private String serviceId;
 }

@@ -19,6 +19,7 @@ import petservice.Handler.RecordNotFoundException;
 import petservice.Service.ServiceService;
 import petservice.mapping.ServiceMapping;
 import petservice.model.Entity.ServiceEntity;
+import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.ServiceResources.AddServiceRequest;
 import petservice.model.payload.request.ServiceResources.DeleteServiceRequest;
 import petservice.model.payload.request.ServiceResources.InfoServiceRequest;
@@ -29,6 +30,7 @@ import petservice.security.JWT.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,21 +49,43 @@ public class ServiceResource {
     JwtUtils jwtUtils;
 
 
+
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<SuccessResponseWithPagination> getServices(@RequestParam(defaultValue = "0") int page,
-                                                                     @RequestParam(defaultValue = "3") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("Name"));
+    public ResponseEntity<SuccessResponseWithPagination> getServices(
+            @RequestParam(required=false) String all, @RequestParam(required=false) String name,
+            @RequestParam(required=false) String description, @RequestParam(required=false) Boolean status,
+            @RequestParam(required=false) BigInteger price, @RequestParam(required=false) BigInteger slot,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "id") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Map<String,String> ParamMap = new HashMap<>();
 
-        Page<ServiceEntity> servicePage = serviceService.getAllService(pageable);
-        if(servicePage.isEmpty()) {
+        if(name != null)
+            ParamMap.put("name",name);
+        if(description != null)
+            ParamMap.put("description",description);
+        if(status != null)
+            ParamMap.put("status",status.toString());
+        if(price != null)
+            ParamMap.put("price",price.toString());
+        if(slot != null)
+            ParamMap.put("slot",slot.toString());
+        if(all != null)
+            ParamMap.put("all",all);
+
+        Page<ServiceEntity> servicePage = serviceService.getAllService(ParamMap,pageable);
+        if(servicePage == null) {
             throw new RecordNotFoundException("No UserEntity existing " );
         }
+
+
         SuccessResponseWithPagination response = new SuccessResponseWithPagination(servicePage);
         response.setStatus(HttpStatus.OK.value());
-        response.setMessage("list services");
+        response.setMessage("list service");
         response.setSuccess(true);
-        response.getData().put("services",servicePage.getContent());
+        response.getData().put("service",servicePage.getContent());
         return new ResponseEntity<SuccessResponseWithPagination>(response,HttpStatus.OK);
     }
 
