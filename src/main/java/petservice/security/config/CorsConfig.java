@@ -17,7 +17,7 @@ public class CorsConfig {
                registry.addMapping("/**")
                        .allowedMethods("GET","POST","DELETE","PUT","OPTIONS")
                        .allowedHeaders("*")
-                       .allowedOrigins("http://localhost:3000/","https://object-oriented-software-design.vercel.app/,https://objectorientedsoftwaredesign.vercel.app/")
+                       .allowedOrigins("http://localhost:3000/","https://object-oriented-software-design.vercel.app/","https://objectorientedsoftwaredesign.vercel.app/")
                        .allowCredentials(true)
                        .maxAge(3600);
             }
