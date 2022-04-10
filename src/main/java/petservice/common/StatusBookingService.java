@@ -3,7 +3,7 @@ package petservice.common;
 public  class StatusBookingService {
 
     public enum StatusBooking {
-        WAITING("waiting"), PROCESSING("processing"), FINISH("finish");
+        WAITING("waiting"), COMPLETE("complete");
         private String status;
         StatusBooking(String status){
             this.status = status;

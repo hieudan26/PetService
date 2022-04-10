@@ -9,6 +9,7 @@ import petservice.model.Entity.BookingServiceEntity;
 import petservice.model.Entity.ServiceEntity;
 import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.BookingServiceResources.AddBookingServiceRequest;
+import petservice.model.payload.request.BookingServiceResources.AdminAddBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 
 import java.time.LocalDateTime;
@@ -73,5 +74,36 @@ public class BookingServiceMapping {
         return newBookingService;
     }
 
+
+    public BookingServiceEntity AdminModelToEntity(AdminAddBookingServiceRequest request) throws Exception {
+        BookingServiceEntity newBookingService = new BookingServiceEntity();
+
+        newBookingService.setPayment(false);
+        newBookingService.setStatus(StatusBookingService.StatusBooking.WAITING.toString());
+
+        UserEntity user = userService.findByUsername(request.getUserBookService());
+        if (user == null) {
+            throw new Exception("user booking is not exist");
+        } else {
+            newBookingService.setUserBookService(user);
+        }
+
+        ServiceEntity service = serviceService.findById(request.getServiceId());
+        if (service == null) {
+            throw new Exception("service is not exist");
+        } else {
+            newBookingService.setService(service);
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime dateTime = LocalDateTime.parse(request.getDateBooking(), formatter);
+            newBookingService.setDateBooking(dateTime);
+        } catch (Exception e) {
+            throw new Exception("Datetime is wrong format");
+        }
+
+        return newBookingService;
+    }
 
 }
