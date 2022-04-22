@@ -38,7 +38,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("api/auth/bill")
+@RequestMapping("api/bill")
 @RequiredArgsConstructor
 public class BillResource {
     private static final Logger LOGGER = LogManager.getLogger(BillResource.class);
