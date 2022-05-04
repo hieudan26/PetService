@@ -109,7 +109,7 @@ public class BookingServiceResources {
 
     @PostMapping("admin")
     @ResponseBody
-    public ResponseEntity<SuccessResponse> adminadddNewBookingService(@RequestBody @Valid AdminAddBookingServiceRequest bookingInfo, BindingResult errors, HttpServletRequest request) throws Exception {
+    public ResponseEntity<SuccessResponse> adminAdddNewBookingService(@RequestBody @Valid AdminAddBookingServiceRequest bookingInfo, BindingResult errors, HttpServletRequest request) throws Exception {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring("Bearer ".length());
