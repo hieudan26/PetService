@@ -2,6 +2,7 @@ package petservice.mapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import petservice.Service.BookingServiceService;
 import petservice.Service.ServiceService;
 import petservice.Service.UserService;
 import petservice.common.StatusBookingService;
@@ -24,6 +25,7 @@ public class BookingServiceMapping {
 
     @Autowired
     ServiceService serviceService;
+
 
     public  BookingServiceEntity updateBookingServiceByInfoAndCustomer (BookingServiceEntity bookingService, InfoBookingServiceRequest infoBookingServiceRequest, UserEntity user) throws Exception{
 
@@ -55,14 +57,18 @@ public class BookingServiceMapping {
         return bookingService;
     }
 
-    public  BookingServiceEntity adminUpdateBookingServiceByInfoAndCustomer (BookingServiceEntity bookingService, AdminInfoBookingServiceRequest infoBookingServiceRequest) throws Exception{
+    public  BookingServiceEntity adminUpdateBookingServiceByInfoAndCustomer (AdminInfoBookingServiceRequest infoBookingServiceRequest) throws Exception{
+
+        BookingServiceEntity updateBooking = new BookingServiceEntity();
+        updateBooking.setId("");
+
 
         if (StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()).equals("")){
             throw  new Exception("Status is not valid");
         }else{
-            bookingService.setStatus(StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()));
+            updateBooking.setStatus(StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()));
         }
-        bookingService.setPayment(infoBookingServiceRequest.getPayment().booleanValue());
+        updateBooking.setPayment(infoBookingServiceRequest.getPayment().booleanValue());
 
 
         UserEntity user = userService.findByUsername(infoBookingServiceRequest.getUsername());
@@ -70,7 +76,7 @@ public class BookingServiceMapping {
             throw new Exception("user is not exist");
         }
         else{
-            bookingService.setUserBookService(user);
+            updateBooking.setUserBookService(user);
         }
 
         ServiceEntity service = serviceService.findById(infoBookingServiceRequest.getServiceId());
@@ -79,16 +85,16 @@ public class BookingServiceMapping {
             throw new Exception("service is not exist");
         }
         else{
-            bookingService.setService(service);
+            updateBooking.setService(service);
         }
 
         try{
-            bookingService.setDateBooking(infoBookingServiceRequest.getDateBooking());
+            updateBooking.setDateBooking(infoBookingServiceRequest.getDateBooking());
         }catch (Exception e) {
             throw new Exception("Datetime is wrong format");
         }
 
-        return bookingService;
+        return updateBooking;
     }
 
     public   BookingServiceEntity modelToEntityAddByCustomer(AddBookingServiceRequest request, UserEntity user) throws Exception {

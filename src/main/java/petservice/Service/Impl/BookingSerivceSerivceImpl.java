@@ -126,13 +126,19 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingService, AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception {
-        bookingService =  bookingServiceMapping.adminUpdateBookingServiceByInfoAndCustomer(bookingService, bookingServiceInfo);
-        if (!this.isAvailableService(bookingService)){
+    public BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingServiceEntity, AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception {
+        BookingServiceEntity bookingService =  bookingServiceMapping.adminUpdateBookingServiceByInfoAndCustomer(bookingServiceInfo);
+        if (!this.isUpdateAvailableService(bookingService)){
             throw new Exception("service not available");
         }else{
+            bookingServiceEntity.setService(bookingService.getService());
+            bookingServiceEntity.setUserBookService(bookingService.getUserBookService());
+            bookingServiceEntity.setDateBooking(bookingService.getDateBooking());
+            bookingServiceEntity.setPayment(bookingService.isPayment());
+            bookingServiceEntity.setStatus(bookingService.getStatus());
             return bookingServiceRepository.save(bookingService);
         }
+
     }
 
     @Override
@@ -155,6 +161,14 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
             throw new Exception("Datatime is not valid");
         }
 
+        if (isFullSlotService(newBooking.getDateBooking(), newBooking.getService())){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean isUpdateAvailableService(BookingServiceEntity newBooking) throws Exception {
         if (isFullSlotService(newBooking.getDateBooking(), newBooking.getService())){
             return false;
         }

@@ -30,10 +30,11 @@ public interface BookingServiceService {
     BookingServiceEntity saveBookingService (BookingServiceEntity bookingService);
     BookingServiceEntity updateBookingServiceInfoCustomer(BookingServiceEntity bookingService, InfoBookingServiceRequest bookingServiceInfo, UserEntity user) throws Exception;
 
-    BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingService, AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception;
+    BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingServiceEntity,  AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception;
 
     public Long countAllByDateBookingAndService(LocalDateTime time, ServiceEntity service);
     public Boolean isAvailableService(BookingServiceEntity newBooking) throws Exception;
+    public Boolean isUpdateAvailableService(BookingServiceEntity newBooking) throws Exception;
     BookingServiceEntity  findByIdAndUserBookService(String id, UserEntity user);
 
     List<BookingServiceEntity>  saveListBookingService (AddListBookingServiceByCustomerRequest bookingInfo, UserEntity user) throws Exception;
