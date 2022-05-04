@@ -10,6 +10,7 @@ import petservice.model.Entity.ServiceEntity;
 import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.BookingServiceResources.AddBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.AdminAddBookingServiceRequest;
+import petservice.model.payload.request.BookingServiceResources.AdminInfoBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,42 @@ public class BookingServiceMapping {
 
 
         bookingService.setUserBookService(user);
+
+        ServiceEntity service = serviceService.findById(infoBookingServiceRequest.getServiceId());
+
+        if (service == null){
+            throw new Exception("service is not exist");
+        }
+        else{
+            bookingService.setService(service);
+        }
+
+        try{
+            bookingService.setDateBooking(infoBookingServiceRequest.getDateBooking());
+        }catch (Exception e) {
+            throw new Exception("Datetime is wrong format");
+        }
+
+        return bookingService;
+    }
+
+    public  BookingServiceEntity adminUpdateBookingServiceByInfoAndCustomer (BookingServiceEntity bookingService, AdminInfoBookingServiceRequest infoBookingServiceRequest) throws Exception{
+
+        if (StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()).equals("")){
+            throw  new Exception("Status is not valid");
+        }else{
+            bookingService.setStatus(StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()));
+        }
+        bookingService.setPayment(infoBookingServiceRequest.getPayment().booleanValue());
+
+
+        UserEntity user = userService.findByUsername(infoBookingServiceRequest.getUsername());
+        if (user == null){
+            throw new Exception("user is not exist");
+        }
+        else{
+            bookingService.setUserBookService(user);
+        }
 
         ServiceEntity service = serviceService.findById(infoBookingServiceRequest.getServiceId());
 
