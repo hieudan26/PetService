@@ -108,6 +108,50 @@ public class BookingServiceResources {
     }
 
 
+    @PostMapping("admin")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> adminAdddNewBookingService(@RequestBody @Valid AdminAddBookingServiceRequest bookingInfo, BindingResult errors, HttpServletRequest request) throws Exception {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            if (jwtUtils.validateExpiredToken(accessToken) == true) {
+                throw new BadCredentialsException("access token is  expired");
+            }
+
+            if (errors.hasErrors()) {
+                throw new MethodArgumentNotValidException(errors);
+            }
+
+
+            BookingServiceEntity newBooking = bookingServiceMapping.AdminModelToEntity(bookingInfo);
+
+
+            if (newBooking.getService() == null){
+                LOGGER.info("Service not exist: " + bookingInfo.getServiceId());
+                throw new Exception("service is not exist");
+            }
+
+            if (!bookingService.isAvailableService(newBooking)){
+                LOGGER.info("Slot of service if full: " + bookingInfo.getServiceId());
+                throw new Exception("service not available");
+            }
+
+            bookingService.saveBookingService(newBooking);
+
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Adding new booking service is successful");
+            response.setSuccess(true);
+            response.getData().put("booking", newBooking);
+
+            return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
+        } else {
+            throw new BadCredentialsException("access token is missing");
+        }
+    }
+
+
 
     @PostMapping("/list")
     @ResponseBody

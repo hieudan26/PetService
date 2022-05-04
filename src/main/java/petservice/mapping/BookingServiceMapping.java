@@ -95,14 +95,7 @@ public class BookingServiceMapping {
             newBookingService.setService(service);
         }
 
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime dateTime = LocalDateTime.parse(request.getDateBooking(), formatter);
-            newBookingService.setDateBooking(dateTime);
-        } catch (Exception e) {
-            throw new Exception("Datetime is wrong format");
-        }
-
+        newBookingService.setDateBooking(request.getDateBooking());
         return newBookingService;
     }
 
