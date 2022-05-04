@@ -23,10 +23,7 @@ import petservice.common.StatusBookingService;
 import petservice.mapping.BookingServiceMapping;
 import petservice.model.Entity.BookingServiceEntity;
 import petservice.model.Entity.UserEntity;
-import petservice.model.payload.request.BookingServiceResources.AddBookingServiceRequest;
-import petservice.model.payload.request.BookingServiceResources.AddListBookingServiceByCustomerRequest;
-import petservice.model.payload.request.BookingServiceResources.AdminAddBookingServiceRequest;
-import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
+import petservice.model.payload.request.BookingServiceResources.*;
 import petservice.model.payload.response.ErrorResponseMap;
 import petservice.model.payload.response.SuccessResponse;
 import petservice.model.payload.response.SuccessResponseWithPagination;
@@ -221,6 +218,42 @@ public class BookingServiceResources {
             response.setSuccess(true);
             response.getData().put("booking", updateBooking);
           
+            return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
+        } else {
+            throw new BadCredentialsException("access token is missing");
+        }
+    }
+
+    @PutMapping("/admin/{id}")
+    @ResponseBody
+    public ResponseEntity<SuccessResponse> adminUpdateBookingService(@RequestBody @Valid AdminInfoBookingServiceRequest bookingInfo, @PathVariable("id") String id, BindingResult errors, HttpServletRequest request) throws Exception {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            if (jwtUtils.validateExpiredToken(accessToken) == true) {
+                throw new BadCredentialsException("access token is  expired");
+            }
+
+            if (errors.hasErrors()) {
+                throw new MethodArgumentNotValidException(errors);
+            }
+
+            BookingServiceEntity updateBooking = bookingService.findById(id);
+
+            if (updateBooking == null){
+                LOGGER.info("Not found booking: " + id);
+                throw new Exception("Not found booking");
+            }
+
+            updateBooking = bookingService.adminUpdateBookingServiceInfoCustomer(updateBooking, bookingInfo);
+
+            SuccessResponse response = new SuccessResponse();
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage("Update booking service is successful");
+            response.setSuccess(true);
+            response.getData().put("booking", updateBooking);
+
             return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
         } else {
             throw new BadCredentialsException("access token is missing");

@@ -13,6 +13,7 @@ import petservice.model.Entity.ServiceEntity;
 import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.BookingServiceResources.AddBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.AddListBookingServiceByCustomerRequest;
+import petservice.model.payload.request.BookingServiceResources.AdminInfoBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 import petservice.repository.BookingServiceRepository;
 import petservice.repository.ServiceRepository;
@@ -117,6 +118,16 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     @Override
     public BookingServiceEntity updateBookingServiceInfoCustomer(BookingServiceEntity bookingService, InfoBookingServiceRequest bookingServiceInfo, UserEntity user) throws Exception {
         bookingService =  bookingServiceMapping.updateBookingServiceByInfoAndCustomer(bookingService, bookingServiceInfo, user);
+        if (!this.isAvailableService(bookingService)){
+            throw new Exception("service not available");
+        }else{
+            return bookingServiceRepository.save(bookingService);
+        }
+    }
+
+    @Override
+    public BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingService, AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception {
+        bookingService =  bookingServiceMapping.adminUpdateBookingServiceByInfoAndCustomer(bookingService, bookingServiceInfo);
         if (!this.isAvailableService(bookingService)){
             throw new Exception("service not available");
         }else{

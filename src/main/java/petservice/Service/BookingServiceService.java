@@ -8,6 +8,7 @@ import petservice.model.Entity.BookingServiceEntity;
 import petservice.model.Entity.ServiceEntity;
 import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.BookingServiceResources.AddListBookingServiceByCustomerRequest;
+import petservice.model.payload.request.BookingServiceResources.AdminInfoBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,8 @@ public interface BookingServiceService {
 
     BookingServiceEntity saveBookingService (BookingServiceEntity bookingService);
     BookingServiceEntity updateBookingServiceInfoCustomer(BookingServiceEntity bookingService, InfoBookingServiceRequest bookingServiceInfo, UserEntity user) throws Exception;
+
+    BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingService, AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception;
 
     public Long countAllByDateBookingAndService(LocalDateTime time, ServiceEntity service);
     public Boolean isAvailableService(BookingServiceEntity newBooking) throws Exception;
