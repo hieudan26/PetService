@@ -9,6 +9,7 @@ import petservice.model.Entity.BookingServiceEntity;
 import petservice.model.Entity.ServiceEntity;
 import petservice.model.Entity.UserEntity;
 import petservice.model.payload.request.BookingServiceResources.AddBookingServiceRequest;
+import petservice.model.payload.request.BookingServiceResources.AdminAddBookingServiceRequest;
 import petservice.model.payload.request.BookingServiceResources.InfoBookingServiceRequest;
 
 import java.time.LocalDateTime;
@@ -68,6 +69,34 @@ public class BookingServiceMapping {
         else{
             newBookingService.setService(service);
         }
+
+        newBookingService.setDateBooking(request.getDateBooking());
+        return newBookingService;
+    }
+
+    public   BookingServiceEntity modelToEntityAdminAddByCustomer(AdminAddBookingServiceRequest request) throws Exception {
+        BookingServiceEntity newBookingService = new BookingServiceEntity();
+
+        newBookingService.setPayment(false);
+        newBookingService.setStatus(StatusBookingService.StatusBooking.WAITING.toString());
+
+        UserEntity user = userService.findByUsername(request.getUsename());
+        if (user == null){
+            throw new Exception("user is not exist");
+        }
+        else{
+            newBookingService.setUserBookService(user);
+        }
+
+        ServiceEntity service = serviceService.findById(request.getServiceId());
+
+        if (service == null){
+            throw new Exception("service is not exist");
+        }
+        else{
+            newBookingService.setService(service);
+        }
+
 
         newBookingService.setDateBooking(request.getDateBooking());
         return newBookingService;
