@@ -2,6 +2,8 @@ package petservice.model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.rest.core.annotation.RestResource;
 

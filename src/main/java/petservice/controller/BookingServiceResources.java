@@ -242,7 +242,6 @@ public class BookingServiceResources {
             BookingServiceEntity updateBooking = bookingService.findById(id);
 
             if (updateBooking == null){
-                LOGGER.info("Not found booking: " + id);
                 throw new Exception("Not found booking");
             }
 
