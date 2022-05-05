@@ -34,7 +34,7 @@ public interface BookingServiceService {
 
     public Long countAllByDateBookingAndService(LocalDateTime time, ServiceEntity service);
     public Boolean isAvailableService(BookingServiceEntity newBooking) throws Exception;
-    public Boolean isUpdateAvailableService(BookingServiceEntity newBooking) throws Exception;
+    public Boolean isUpdateAvailableService(LocalDateTime time, ServiceEntity service) throws Exception;
     BookingServiceEntity  findByIdAndUserBookService(String id, UserEntity user);
 
     List<BookingServiceEntity>  saveListBookingService (AddListBookingServiceByCustomerRequest bookingInfo, UserEntity user) throws Exception;

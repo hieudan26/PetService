@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import petservice.Service.BookingServiceService;
+import petservice.Service.ServiceService;
+import petservice.Service.UserService;
+import petservice.common.StatusBookingService;
 import petservice.mapping.BookingServiceMapping;
 import petservice.model.Entity.BookingServiceEntity;
 import petservice.model.Entity.ServiceEntity;
@@ -37,6 +40,11 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
 
    final ServiceRepository serviceRepository;
 
+   @Autowired
+   UserService userService;
+
+   @Autowired
+   ServiceService serviceService;
    @Autowired
     BookingServiceMapping bookingServiceMapping;
 
@@ -127,18 +135,18 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
 
     @Override
     public BookingServiceEntity adminUpdateBookingServiceInfoCustomer(BookingServiceEntity bookingServiceEntity, AdminInfoBookingServiceRequest bookingServiceInfo) throws Exception {
-        BookingServiceEntity bookingService =  bookingServiceMapping.adminUpdateBookingServiceByInfoAndCustomer(bookingServiceInfo);
-        if (!this.isUpdateAvailableService(bookingService)){
-            throw new Exception("service not available");
-        }else{
-            bookingServiceEntity.setService(bookingService.getService());
-            bookingServiceEntity.setUserBookService(bookingService.getUserBookService());
-            bookingServiceEntity.setDateBooking(bookingService.getDateBooking());
-            bookingServiceEntity.setPayment(bookingService.isPayment());
-            bookingServiceEntity.setStatus(bookingService.getStatus());
-            return bookingServiceRepository.save(bookingService);
-        }
 
+        if(isVailableUpdate(bookingServiceInfo)) {
+
+            ServiceEntity service = serviceService.findById(bookingServiceInfo.getServiceId());
+            if (!this.isUpdateAvailableService(bookingServiceInfo.getDateBooking(), service)) {
+                throw new Exception("service not available");
+            } else {
+                bookingServiceEntity = bookingServiceMapping.adminUpdateBookingServiceByInfoAndCustomer(bookingServiceEntity , bookingServiceInfo);
+                return bookingServiceRepository.save(bookingServiceEntity);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -168,8 +176,8 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
     }
 
     @Override
-    public Boolean isUpdateAvailableService(BookingServiceEntity newBooking) throws Exception {
-        if (isFullSlotService(newBooking.getDateBooking(), newBooking.getService())){
+    public Boolean isUpdateAvailableService(LocalDateTime time, ServiceEntity service) throws Exception {
+        if (isFullSlotService(time, service)){
             return false;
         }
         return true;
@@ -224,6 +232,30 @@ public class BookingSerivceSerivceImpl implements BookingServiceService {
         if (slot.intValue() < maxSlot.intValue()) {
             return false;
         }
+        return true;
+    }
+
+
+    private   Boolean isVailableUpdate (AdminInfoBookingServiceRequest infoBookingServiceRequest) throws Exception{
+
+
+        if (StatusBookingService.handleUpperCaseString(infoBookingServiceRequest.getStatus()).equals("")){
+            throw  new Exception("Status is not valid");
+        }
+
+
+        UserEntity user = userService.findByUsername(infoBookingServiceRequest.getUsername());
+        if (user == null){
+            throw new Exception("user is not exist");
+        }
+
+
+        ServiceEntity service = serviceService.findById(infoBookingServiceRequest.getServiceId());
+
+        if (service == null){
+            throw new Exception("service is not exist");
+        }
+
         return true;
     }
 }
